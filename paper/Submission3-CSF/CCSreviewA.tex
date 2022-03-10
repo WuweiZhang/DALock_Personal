@@ -1,0 +1,134 @@
+\section{Prior Reviews from reviewer A}
+%===========================================================================
+
+\mypara{Overall merit:} 2. Weak reject
+
+\mypara{Reviewer expertise:} 3. Knowledgeable
+
+\mypara{Paper summary:}
+
+This paper argues through simulation that locking an account based on
+the total probability mass (i.e., popularity) of passwords submitted
+in incorrect login attempts to that account, versus simply the number
+of incorrect passwords attempted, yields a more usable and secure
+method of defending against online guessing attacks (since attackers
+who blindly guess passwords would likely guess popular ones).  The
+paper reports on simulations it performed based on three breached
+password datasets (Yahoo!, LinkedIn, and RockYou) and data structures
+for summarizing the probability mass of each password.
+
+\mypara{Strengths:} The paper suggests a creative and intuitively appealing use of a
+password probability distribution.
+
+\mypara{Weaknesses:} While any simulation-based study will be subject to criticism, this
+one seems to be particularly problematic in apparently contradicting
+public sources of information about password guessing attacks.  Based
+on what I can find, it appears that the benefits of the proposed
+approach are exaggerated by the provided evaluation relative to the
+state of practice.
+
+\mypara{Comments for author}
+
+It is now common practice for sites that take security seriously to
+prevent users from choosing the most popular passwords, and so it is
+primarily for this condition that I believe the proposed defense
+should be evaluated --- i.e., if a site is going to integrate a model
+of popular passwords into its password management lifecycle, it would
+likely do so first for precluding weak password choices and then (and
+only if it offers significant additional benefit) as proposed in this
+submission.  The one parameter setting the authors considered to
+account for this possibility was a banned password list of the $10^4$
+most popular passwords.  I would have really appreciated graphs that
+illustrate the effectiveness of this scheme as this parameter is
+varied, but more to my point here, available data suggests that blind
+password guessing is considered "solved" even with much smaller banned
+password lists.  Just as one example that I found while Googling
+around right now, consider Microsoft's experience as reported in:
+\url{https://techcommunity.microsoft.com/t5/azure-active-directory-identity/your-pa-word-doesn-t-matter/ba-p/731984}
+
+where the type of attack you're addressing here is called "password
+spraying".  The article concludes: "As an admin, you want to prevent
+use of these commonly attacked passwords when passwords are created or
+changed. We have been using this approach for years in Microsoft
+account ... and at this point, we have effectively mitigated password
+spray as a mechanism on active accounts.  ... So, as far as password
+spray is concerned -- your password doesn’t matter -- as long as it
+isn’t in the 'most common passwords' top 50 list!"  In light of the
+analysis there, I'm not sure how to interpret your results without
+concluding that the way you've constructed your simulations simply
+does not reflect reality and is casting your proposal in a optimistic
+light.
+
+I could quibble with particulars of your simulations, but the larger
+message here is that your simulations don't seem to be particularly
+well informed by current practice (or current recommended practice).
+Another way to interpret what I could find is that it appears that
+some variant of your approach must already be in use, in that
+Microsoft can't be locking up accounts based on 3 or 10 incorrect
+guesses regardless of what those guesses are --- otherwise they'd be
+regularly locking up huge numbers of their users' accounts, based on
+the experiences they describe at the link above.
+
+One more thing: I'd really encourage you to base your simulations on
+some better and more modern datasets.  
+
+On the quality of the text:
+
+- "We remark that ..." appears at least 20 times in this submission,
+  and I, for one, find it distracting and at some point annoying.  I
+  don't need you to tell me that you're telling me something.
+
+- The text includes numerous misspellings, repeated use of nonsensical
+  notation (e.g., "P(()pw1)") that I can only assume is due to
+  incorrect use of macros, and general sloppiness.  Please proofread
+  your submission.
+
+\mypara{Response to rebuttal}
+Thanks very much for your rebuttal, and apologies for not responding
+to your rebuttal until after the notification deadline.  (This was my
+fault, due to not paying enough attention to the reviewing schedule
+and milestones.)  One thing you mentioned was this:
+
+`` Reviewer 1 and 2 both commented that they would like to see the
+   analysis repeated as we vary the number of password being banned
+ (e.g., ban the top $10^2$, top $10^3$,...). We agree that this would be
+ an interesting experiment which would not be too difficult to run in
+ our setting."
+
+I think this would help your paper a lot, but my other point is that
+you should do your best to reconcile your results against information
+available from large operators --- yes, like the Microsoft post that I
+found after Googling around a bit (and other things I'm sure you can
+find with additional looking).  On the one hand, Microsoft, based on
+years of experience operating millions of accounts, is telling me that
+banning the top 50 or so passwords is enough to address password
+spraying without imposing on usability significantly.  On the other
+hand, you're telling me that even after banning the top 10,000 most
+common passwords, your defense still provides benefit to both
+usability and security.  How am I supposed to reconcile these claims?
+The answer is either that your improvements simply aren't very
+significant (that's my reading of some of Reviewer B's comments) or
+else there is something that you're not accounting for in your
+experiments (or else that Microsoft is lying, but I have no idea why
+they'd do that).  Just Googling around a bit again, I found
+
+\url{https://www.microsoft.com/en-us/research/wp-content/uploads/2016/06/Microsoft_Password_Guidance-1.pdf}
+
+which says, "[password spraying] is not very effective against
+Microsoft accounts due to our banned password and smart lockout
+mechanisms."  What can you find about such "smart lockout" mechanisms
+in use in practice, either from published reports, recommended best
+practices, simple reverse engineering at a few services, or even
+simply asking the right group at MSR?  It seems that they are either
+doing what you're proposing or they're doing something that obviates
+what you're proposing.  It is unnerving to be discovering these
+questions after a few minutes of Googling, with no recognition by the
+authors that there are questions here and no evidence that they've
+even tried to resolve them.
+
+
+\mypara{Required improvements}
+	Better ground the experiments and mechanism design in light of
+	available information about state-of-the-art defenses against online
+	password guessing.  Unfortunately, I expect that this might lead to a
+	substantially different paper.

@@ -1,0 +1,54 @@
+
+\documentclass[sigconf, anonymous]{acmart}
+
+\fancyhf{} % Remove fancy page headers 
+\fancyhead[C]{Anonymous submission \#9999 to ACM CCS 2020} % TODO: replace 9999 with your paper number
+\fancyfoot[C]{\thepage}
+\input{premierPackage}
+\hyphenation{op-tical net-works semi-conduc-tor}
+\setcopyright{none} % No copyright notice required for submissions
+\acmConference[Anonymous Submission to ACM CCS 2020]{ACM Conference on Computer and Communications Security}{Due 4 May 2020}{London, TBD}
+\acmYear{2020}
+
+\settopmatter{printacmref=false, printccs=true, printfolios=true} % We want page numbers on submissions
+
+%%\ccsPaper{9999} % TODO: replace with your paper number once obtained
+
+\begin{document}
+\title{$\DALock$:  \underline{D}istribution \underline{A}ware Password Throttling} 
+
+\begin{abstract}
+	\input{abstract}
+\end{abstract}
+
+
+
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002978.10003029.10011703</concept_id>
+<concept_desc>Security and privacy~Usability in security and privacy</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002978.10002991.10002992</concept_id>
+<concept_desc>Security and privacy~Authentication</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Security and privacy~Usability in security and privacy}
+\ccsdesc[500]{Security and privacy~Authentication}
+
+% -- end of section to replace with generated code
+
+\keywords{Authentication Throttling; Password; Dictionary Attack} % TODO: replace with your keywords
+
+\maketitle
+
+\input{ccs-body} 
+\newpage
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{cryptobib/abbrev0,cryptobib/crypto,otherReference/IEEEExample}
+\end{document}

@@ -1,0 +1,8 @@
+% !TEX root = main.tex
+%------------------------------------------------------------------------------
+
+
+\section{Conclusion}
+We present a novel {\em distribution-aware} password throttling mechanism $\DALock$ that penalizes incorrect passwords proportionally to their popularity. We show that $\DALock$ can be reliably instantiated with either a password strength model such as $\ZXCVBN$ or with a differentially private count sketch. Our empirical analysis demonstrates that $\DALock$ offers a superior balance between security and usability and is particularly effective when used combined with a ban-list of overly popular passwords. For example, on the bfield dataset, $\DALock$ can reduce the success rate of an attacker to $0.08\%$ whilst simultaneously reducing the unwanted lockout rate to just $0.08\%$ if 1000 passwords are banned. Under the same situation, the classic 3-strikes mechanism results in worse security and usability performance. ($0.58\%$ for security and 4.0\% for usability).
+
+%\jeremiah{Be more specific with the last comparison. What dataset? What DALock params? Also, best to compare security with 3-strike mechanism for security and usability)}

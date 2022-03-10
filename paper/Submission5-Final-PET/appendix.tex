@@ -1,0 +1,176 @@
+% !TEX root = main.tex
+
+%5 pages maximum bibliography and clearly-marked appendices for submission, 6 pages for revising. unlimited for final
+
+\appendix
+
+
+\section{Simulating Users' Mistakes}\label{appendix:simulateMistakes}
+\vspace*{-\baselineskip}
+In this section, we include the complete flowchart used to simulate typos and recall errors --- see \textbf{figure}~\ref{figure:flowChartTypo}. The first node in the flowchart simulates recall errors, and we set this probability to be $2.4\%$, a number we derived based on empirical data from \cite{CCS:CWPCR17,SP:CAAJR16}. When simulating a recall error we randomly select $pw'$ from one of the five other passwords we previously selected for our simulated user (the passwords represent the user's other accounts). At this point in the flow chart we simulate whether or not the user miss-types his intended password (5\%) or enters it in correctly ($95\%$) --- the number $5\%$ was derived from empirical data collected in \cite{CCS:CWPCR17,SP:CAAJR16}. When simulating a typo we further follow the empirical data in Table \ref{Table:TypoTypes}. Notice that our simulated user can make both mistakes. e.g., recall the wrong password $pw$' and misstype the password $pw$'. 
+
+For example, suppose that the user's actual password is letmein. The simulated user will recall the correct password and type it correctly with probability $0.976 \times 0.95 \approx 0.927$, and the simulated user will enter LETMEIN (CAPSLOCK error) with probability $0.976 \times 0.05 \times 0.04 \approx 0.002$. Suppose that the simulated user has $5$ other passwords and one of them is 123456. In this case the simulated user would enter 123456 with probability $0.024 \times (1/5) \times 0.95 \approx 0.0046$ --- the $(1/5)$ term is the conditional probability of recalling 123456 when simulating a recall error.
+
+
+\begin{figure}
+	\input{Figures/Experiments/FlowChart}
+	\vspace{-0.2in}
+	\caption{Flow Chart for Simulating Users' mistake}\label{figure:flowChartTypo}
+\end{figure}
+
+\begin{center}
+\begin{table}[h]
+
+	\begin{tabular}{|c|c|}
+		\hline
+		Typo            &  Mistake \% (Rounded) \\ \hline
+		CapLock On           & 14                            \\ \hline
+		Shift First Char     & 4                             \\ \hline
+		One Extra Insertion  & 12                            \\ \hline
+		One Extra Deletion   & 12                            \\ \hline
+		One Char Replacement & 31                            \\ \hline
+		Transposition        & 4                             \\ \hline
+		Two Deletions         & 3                             \\ \hline
+		Two Insertions        & 3                             \\ \hline
+		Two Replacements      & 10                            \\ \hline
+		Others               & 8                             \\ \hline
+	\end{tabular}
+
+	\caption{Typo Distributions\cite{CCS:CWPCR17}}
+	\label{Table:TypoTypes}
+	\vspace{-0.5cm}
+\end{table}	\end{center}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\section{More Experimental Results}\label{appendix:experimentalResults}
+\vspace*{-\baselineskip}
+In this section, we provide more detailed experimental results for readers to understand the underlying details of $\DALock$. Figure \ref{fig:secuseB1000} plots the unwanted locked rate (usability) vs. compromised accounts (security) for various instantiations of $\DALock$ as the hit-count parameter varies: $\hitCountThreshold \in \{2^{-8}, 2^{-9},2^{-10},2^{-11}, 2^{-12}\}$. Note: The plot is similar to Figure \ref{figure:UseSecTradeoff} except that the banlist size is $B=10^3$ in Figure \ref{fig:secuseB1000} while $B=10^4$ in Figure \ref{figure:UseSecTradeoff}. Additional experimental plots are available in the full version of the paper including usability/security plots for $B \in \{0, 10,100, 10^4, 10^5, 10^6\}$. In the full version, we also evaluate the performance of the differentially private count sketch as the privacy budget $\epsilon \in \{0.1, 0.5, 1.0, \infty\}$ and subsampling rate $\{1\%, 5\%, 10\%, 100\%(all)\}$ vary. Intuitively, $\epsilon=0.1$ provides the strongest privacy guarantee and $\epsilon = \infty$ indicates no differential privacy. Briefly, we found that the differentially private count-sketch performs sufficiently well even when using the smallest privacy budget $\epsilon=0.1$. Thsu, due to space limitations, we only show our results with the subsampling rates $5\%$ and $100\%$ (all) fixing $\epsilon=0.1$ (strongest privacy). 
+
+Figure \ref{fig:securitydpcomparefull} (resp. Figure \ref{fig:usabilitydpcomparefull}) plots the number of compromised accounts (resp. number of unwanted lockouts) vs. banlist size to illustrate the security (resp. usability) of $\DALock$ under various instantations. The plot is similar to Figures \ref{figure:Security} and \ref{figure:Usability} from the main body except that we include additional password datasets and we evaluate $\DALock$ with different hit-count parameters.
+
+ % We selected several plots that can show the characteristics of various implementations of $\DALock$}. 
+
+%We elaborate on each frequency oracle's security and usability performance with wider hit-count $\hitCountThreshold$ range:  For count sketch frequency oracle implementation, we show extra results with subsampling and differential privacy using the following testing parameters:
+%\begin{itemize}
+%	\item Subsampling rate: 1\%, 5\%, 10\%, 100\%(all)
+%	\item Differential privacy budget: 0.1, 0.5, 1.0, $\infty$ 
+%\vspace{-0.3cm}
+%\end{itemize}
+
+%In addition, we ran the experiments on two extra datasets: LinkedIn and Yahoo!. Since the Yahoo! dataset~\cite{SP:Bonneau12,NDSS:BloDatBon16} only contains frequencies without actual passwords. i.e., instead of recording the pair $(pw,  \TrueFInD{pw}{\SampledData{\AllUser} })$ the dataset simply records $\TrueFInD{pw}{\SampledData{\AllUser} }$ . We generate a complete password dataset by designating a unique string for each password. Thus, we avoid using password models like $\ZX$ to analyze $\DALock$ with the Yahoo! dataset since frequency estimation requires access to the original passwords. However, we are still able to evaluate $\DALock$ with the Yahoo! dataset using the count sketch frequency oracle. 
+
+We begin by discussing the pros and cons of each frequency oracle based on our results, and then provide our recomendations on how to deploy $\DALock$. 
+
+\mypara{PCFG/NeuralNet/Markov/HashCat/Min} When adoping one of these models as a frequency oracle for $\DALock$ one can achieve better usability than the 3-strikes mechanism as long as $\hitCountThreshold \ge 2^{-9}$. When the ban-list size $|B|$ is small we find that the the security is also improved. However, as the ban-list size increases compromised account rate for 3-strikes drops slightly below $\DALock$ when instantated with a frequency oracle based on guessing numbers derived from these models (PCFG/NeuralNet/Markov/HashCat/Min) --- security is still better than the classical 10-strikes mechanism. Based on these observations we recommend against instantiating $\DALock$ with these frequency oracles as one can obtain better performance with other frequency oracles. 
+
+\mypara{ZXCVBN} If it is not feasible to implement $\DALock$ with a differentially private count sketch we recommend deploying $\DALock$ with $\hitCountThreshold =2^{-9}$  using $\ZXCVBN$ as our frequency oracle. We find that $\ZXCVBN$ offers better security and usability in comparison to the classical $3$-strikes mechanism even when the banlist size $B$ is larger. Our results show that adopting any $\hitCountThreshold \le 2^{-8}$ results in security advantage (compared to the 3-strikes mechanism) across all datasets even with a large ban-list; however, we do observe that $\ZXCVBN$ overestimate many rare passwords. Thus, we recommend setting $\hitCountThreshold \ge 2^{-9}$ to avoid uncessary lockouts (usability). When setting $\hitCountThreshold \ge 2^{-9}$ and using a moderately size banlist (e.g., $B=10^3$) we find that usability is close to the much-less-secure 10-strikes mechanism while security is better than the much-less-usable 3-strikes mechanism. 
+% In conclusion, deploying $\DALock$ with $\ZXCVBN$ is recommended when it is hard to obtain accurate password distribution description. Based on the empirical results, setting $\hitCountThreshold = 2^{-9}$ \textit{and} banning popular passwords yields the best security/usability trade-off.
+
+
+\mypara{Differentially Private Count Sketch} We find that usability/security performance of $\DALock$ is best when we implement with a count-sketch frequency oracle provided that we have sufficient data to train the differentially private count-sketch. Tunning $\hitCountThreshold$ for optimal security/usability trade-off on a differentially private Count Sketch is a less challenging task compared to other frequency oracles. Our results show that 0.1-CS-all can achieve strictly better security and usability than the 3-strikes mechanism for $\hitCountThreshold$ $\in$ [$2^{-8},2^{-10}$] on all datasets and with all ban-list sizes. In addition, we observe that 0.1-CS-all reaches approx. 0\% lockout rate if 100 or more passwords are banned when $\hitCountThreshold$ $\in$ [$2^{-8},2^{-10}$].   To investigate how many users one needs to accurately build a differentially private count sketch, we train count sketches with subsampled datasets - $\SampledData{\AllUser_{1\%}}$, $\SampledData{\AllUser_{5\%}}$, and $\SampledData{\AllUser_{10\%}}$ - in addition to $\SampledData{\AllUser}$ . Our simulation results show that lower sampling rates can adversely impact security as $\Adversary$ can take advantage of underestimated passwords. We also observe that  0.1-CS-10\%/0.1-CS-5\%/0.1-CS-1\% are nearly as accurate as 0.1-CS-all when we have more than 2/6/32 millions users in the $\SampledData{\AllUser}$(see clixsense/csdn/RockYou). This result empirically shows organizations need approx. 0.2-0.3 million users to train a sufficiently \textit{accurate} differentially private Count Sketch. In summary, if the organization has more than $0.3$ million users we recommend deploying $\DALock$ with a $\epsilon = 0.1$-differentially private count sketch and $\hitCountThreshold$ $\in$ [$2^{-8},2^{-10}$]. 
+
+%In this section, we focus discussion on the impact of the following three parameters: hit-count $\hitCountThreshold$, sampling rate r, and privacy budget $\epsilon$. The experimental plots are available in the full version of the paper. As long as we have sufficient data to train the differentially private count-sketch 
+
+
+
+
+
+%To study how privacy noise can perturb security/usability performance of well-tuned differentially privacy Count-Sketch (e.g., with throttling parameters k = 10 and $\hitCountThreshold$ = $2^{-10}$) in bad scenarios, we experiment training Count Sketch on small datasets (e.g., $\SampledData{\AllUser_{1\%}}$) with practically small privacy budgets. Our results demonstrate the security/usability performance of three different differentially Count-Sketches: 0.1-CS-1\%, 0.5-CS-1\%, and 1.0-CS-1\%. In addition, we observe that even 0.1-differential privacy had minimal impact on both security and usability performance of Count Sketches. 
+% In brief, the empirical results show that differentially private Count Sketch can be easily trained with low privacy budget cost, e.g., $\epsilon = 0.1$ and with as few as 0.2-0.3 million users. It's also the easiest frequency oracle to tune for security/usability performance. We recommend large entities to deploy $\DALock$ with differentially private Count Sketch once the above criteria can be met.
+
+%\wuwei{\mypara{Deploying $\DALock$} we found two feasible solutions to instantiate $\KPsiDALock{10}{\hitCountThreshold}$ based on experimental results - differentially private count sketches and $\ZXCVBN$ password strength meter. We recommend deploying $\DALock$ with a 0.1-differentially private count sketch with $\hitCountThreshold$ $\in$ [$2^{-8},2^{-10}$] when the authentication server can collect at least 0.3 million passwords. Otherwise we recommend using $\ZXCVBN(K:10,\hitCountThreshold:2^{-9})$ to instantiate $\DALock$. Banning popular passwords is recommended for both apporaches to achieve better security/usability results. }
+
+
+\begin{table}[htb]
+	\scalebox{0.90}{
+		\begin{tabular}{|l|l|l|}\hline
+			
+			Notation      & Description                                                                   \\\hline
+			
+			$(\strikeThreshold, \hitCountThreshold)$-$\DALock$  & $\DALock$ with strike threshold $\strikeThreshold$                 \\        
+			& and hit count threshold $\hitCountThreshold$    \\\hline
+			$\Adversary$  & \underline{$\Adversary$}dversary                            \\\hline
+			
+			$\AllUser$ & A set of {$\AllUser$}sers           \\\hline
+			
+			$u$           & A user  $u \in \AllUser$                                                    \\\hline
+			
+			$\AllPassword$ & The set of all potential user \underline{$\AllPassword$}asswords \\\hline
+			
+			$\SampledData{\AllUser} \subseteq \AllPassword$ & a multiset of $N$ sampled passwords  for\\
+			
+			& users $u_1,\ldots,u_N \in \AllUser$ \\ \hline
+			
+			$\PasswordOfU{u}$         & User $u$'s password   \\\hline
+			
+			$\RankRPassword{r}$         & The $r$'th most likely password in $\SampledData{\AllUser} \subseteq \AllPassword$ \\\hline
+			
+			$\CountSketch$ & \underline{C}ount (Median) \underline{S}ketch data structure\\    \hline    	
+			
+			$\TrueFInD{pw}{\SampledData{\AllUser}}$ & Frequency of password $pw$ in dataset $\SampledData{\AllUser}$ \\\hline
+			
+			$\TrueP{pw}$ & Empirical probability of password $pw$  \\\hline        
+			
+			$\EstF{pw}$ & Estimated frequency of password $pw$\\\hline
+			
+			$\EstP{pw}$ & Estimated probability of password $pw$  \\\hline                    
+			
+			$\hitCountThreshold$ & Hit count threshold \\\hline 
+			
+			$\hitCountThresholdOfU{u}$ & Cumulative hit count threshold on $u$’s account. \\&The account gets locked out if $\hitCountThresholdOfU{u}$ exceeds $\hitCountThreshold$\\\hline
+			
+			$\strikeThreshold$ & Traditional strike threshold. \\\hline
+			
+			$\strikeThresholdOfU{u}$ & Cumulative strike threshold on $u$'s account. \\&The account gets locked if $\strikeThresholdOfU{u}$ exceeds $\strikeThreshold$. \\\hline
+			
+			% ---- Below is obsolete notations.
+			
+			%$\\CountSketchWidth$ & \underline{w}idth (or number of columns) of \CountSketch\\ \hline
+			
+			%$\\CountSketchDepth$ & \underline{d}epth (or number of rows) of \CountSketch\\      \hline  
+			
+			%$\TotalFreq$ & \underline{T}otal frequency counts of \CountSketch\\    \hline
+			
+			%$\HashFunRowD$ & \underline{h}ash function for $\underline{d}^{th}$ row\\\hline
+			
+			%$\HashFunSign$ & \underline{h}ash function to compute the sign of a key. \\\hline
+			
+			%	DP & \underline{D}ifferential \underline{P}rivacy\\\hline
+			
+			%	$\epsLap{\epsilon}{d}$ & \underline{Lap}lace noise with privacy budget $\epsilon$ and sensitivity d\\\hline
+			
+		\end{tabular}
+	}
+	
+	\caption{Notation Summary}\label{table: notation}
+	\vspace{-0.2cm}
+	
+\end{table}
+\vspace{-0.3cm}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+
+	\begin{figure*}
+		\includegraphics[width=\linewidth, height = 7.5cm]{Figures/Experiments/B1000.png}
+		\vspace{-0.2in}
+		\caption[Usability/Security Trade-off]{Usability/Security Trade-off(Banlist Size = 1000)}
+		\label{fig:secuseB1000}
+		\includegraphics[width=\linewidth, height = 7.5cm]{Figures/Experiments/Attacker/SecurityBigPictureFull}
+		\vspace{-0.2in}
+		\caption{Security Measurement of $\DALock$ (All Datasets)}
+		\label{fig:securitydpcomparefull}	
+		\includegraphics[width=\linewidth, height = 7.5cm]{Figures/Experiments/Utility/UsabilityBigPictureFull}
+		\vspace{-0.2in}
+		\caption{Usability Measurement of $\DALock$(All Datasets)}
+		\label{fig:usabilitydpcomparefull}	
+	\end{figure*}
+	
+
+
+
+
+

@@ -1,0 +1,73 @@
+% !TEX root = main.tex
+\vspace*{-\baselineskip}
+\section{Experimental Design} %Done
+
+We evaluate the performance of $\DALock$ through an extensive battery of empirical simulations. In this section, we describe the modeling choices we made when designing our experiments. To simulate the authentication ecosystem, we need to simulate honest users' behavior, the authentication server running $\DALock$, and an online attacker. 
+
+Briefly, when simulating users, we need to model the distribution over users’ passwords, the distribution over honest login mistakes (e.g., typos or recall errors), and the user's login schedule. When simulating the distribution over users’ passwords, we use multiple empirical datasets to define the underlying password distribution. We use a Poisson arrival process to model the frequency of user login attempts~\cite{AC:BloBluDat13}. Our model for users’ mistakes is informed by recent empirical studies of password typos~\cite{CCS:CWPCR17,SP:CAAJR16} and is augmented to simulate other mistakes, i.e., recall errors.  The key question for simulating an authentication server running $\DALock$ is how the (password) frequency oracle $\EstP{\cdot}$ is implemented. We consider two concrete implementations: password strength models~\cite{ USENIX:Wheeler16,USENIX:USBCCKKMMS15,USENIX:MUSKBCC16} (e.g., $\ZX$, Markov Models, Neural Networks) and (differentially private) count sketches. When simulating the attacker, we consider an untargeted one who knows the distribution over user passwords as well as the $\DALock$ mechanism --- including the frequency oracle $\EstP{\cdot}$. We leave the question of tuning DALock to protect against targeted online attackers~\cite{CCS:WZWYH16} as an important direction for future research. We elaborate on each of these key model components below.  We begin by with an overview of the empirical datasets $\SampledData{\AllUser}$ that we used in our experiments.
+
+\vspace*{-\baselineskip}
+\subsection{Experimental Datasets}\label{section:experiment:experiment_dataset} 
+
+In this work, we use multiple real-world password datasets (see Table~\ref{table: datasetsummary}). Those datasets were either hacked or leaked via various vulnerabilities and eventually made public on the Internet. The only exception is the Yahoo dataset, which is a sanitized password frequency dataset collected~\cite{SP:Bonneau12}  with permission from Yahoo!. It consists of anonymized password histograms representing almost 70 million Yahoo! users who logged into their account during a $48$-hour window in May 2011. Yahoo! later authorized the public release of a differentially private version of this dataset~\cite{NDSS:BloDatBon16}. We remark that this frequency corpus \textit{does not contain any plaintext passwords}, so we did not use password strength models in our experiments involving the Yahoo! dataset. 
+
+%In \lazyref{Section}{section:experimentalresult}, we present the result using all datasets except LinkedIn
+
+
+%\footnote{The LinkedIn dataset we used is a plaintext password corpus (\textit{partially}) recovered constructed from a leak in 2012. It contains approximately $68$ million cracked passwords, but the actual size of the leak is larger. Furthermore, there is a larger (differentially private) frequency corpus (without plaintext) based on $174+$ million passwords~\cite{harsha2020bicycle} that is publicly available. However, this dataset does not include any plaintext passwords. We chose to use the smaller dataset in our experiments so that we could evaluate with frequency oracles based on password models (e.g., $\ZXCVBN$, PCFGs, Neural Networks).}  and Yahoo. Results on these two datasets can be found in \lazyref{Appendix}{appendix:experimentalResults}.
+
+Each dataset defines an empirical password distribution. In each of our experiments, we assume that this distribution matches the real (unknown) password distribution from which these datasets were sampled. While the empirical distribution may not precisely match the real one, we stress that our analysis focuses on the most popular passwords in the distribution --- the ones that an attacker will try to guess. Because the datasets are all quite large ( the smallest dataset has over $0.5$ million passwords), standard concentration bounds imply that the true probability of a popular password in the distribution will almost certainly closely match the empirical probability.
+
+
+\begin{table}[h]
+	
+	
+	\scalebox{1.05}{
+		
+		
+		\begin{tabular}{|c|c|c|c|c|}
+			
+			
+			\hline
+			
+			
+			Dataset     & Passwords & Accounts & $\TrueP{pw_1}$ & $\TrueP{pw_{1-10}}$ \\ \hline
+			
+			
+			Yahoo    & 33,895,873                     &  69,301,337            & 1.1\%  & 1.9\%                \\ \hline
+			
+			RockYou  & 14,341,564                & 32,603,388                      & 0.89\%  &2.1\%                   \\ \hline
+			
+			000webhost  & 10,587,915               & 14,960,642                      &  0.081\%&0.48\% \\ \hline
+			
+			LinkedIn&  6,840,885              & 68,361,064                    &1.53\% &2.82\%                        \\ \hline
+			CSDN  & 4,037,268               & 5,908,494                       & 1.29\%     &3.72\%               \\ \hline
+			
+			clixsense  & 1,628,297               & 2,195,900 &  0.15\% & 0.7\% \\ \hline
+			
+			brazzers & 587,934 & 925,614 &0.58\% &1.13\%\\ \hline
+			
+			bfield  & 416,034& 539,434&  0.48\% & 1.97\% \\ \hline
+			
+			
+		\end{tabular}
+		
+		
+	}
+	
+	\caption{Summary of dataset}\label{table: datasetsummary}
+	
+	\vspace{-0.3cm}
+\end{table}
+
+\vspace{-0.3cm}
+
+
+\mypara{Ethics:} The datasets we used contain passwords that were previously stolen and subsequently leaked online. The use of such data raises critical ethical considerations; however, such password lists are already publicly available online, so our use of the data does not exacerbate the prior harm to users. We did not crack any new user passwords. Furthermore, the datasets we use have been cleaned of all identifying information beyond the passwords themselves.  In summary, we believe that our use of the leaked data will not exacerbate prior harm to users, and the lockout mechanism we develop and evaluate may help to protect user passwords in the future.
+
+\input{ModelingUsers}
+\input{ModelingAuthenticationServer}
+\input{ModelingAttacker}
+
+
+

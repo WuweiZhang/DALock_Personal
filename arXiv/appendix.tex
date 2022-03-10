@@ -1,0 +1,178 @@
+% !TEX root = main.tex
+\clearpage
+\appendix
+\section{$\DALock$}
+
+
+
+\subsection{$\DALock$ Authentication Algorithm}
+We supplement the pseudo code of $\DALock$ in this section to help readers understand how to implement $\DALock$ for authentication. The authentication process takes four arguments: username $u$, input password $pw$, salt $s_u$, and password popularity estimator $\sigma$. Before verifying the correctness of entered password, $\DALock$ first check if $u$'s account has already been locked or not based on $\hitCountThreshold_{u}$ and $\strikeThreshold{u}$. If the account is not locked, $\DALock$ proceeds and verify the correctness of the passwords. If the password is valid, $\DALock$ resets strike threshold $\strikeThresholdOfU{u}$ and grant user the access to the service. If the entered password is wrong then in addition to denying the access to the service, the server also increases $\hitCountThresholdOfU{u}$ and $\strikeThreshold$ by $\EstP{pw}$ and 1 respectively. 
+
+
+\begin{algorithm}[!htb]
+	\caption{\textbf{$\DALock$}: Novel Password Distribution Aware Throttling Mechanism }\label{algorithm:DALock}
+	\begin{algorithmic}[1]
+		\Function{login}{$u$, $pw_u$, $\sigma$,$s_u$} 
+		\If {$\hitCountThresholdOfU{u} \geq \hitCountThreshold$ or  $\strikeThresholdOfU{u} \geq \strikeThreshold$ }
+		\State Reject Login
+		\EndIf
+		\If{$hash(pw,s_u)$ == $hash(pw_u,s_u)$}
+		\State Reset $\strikeThresholdOfU{u}$ to $\strikeThreshold$ 
+		\State Grant Access
+		\Else
+		\State $\hitCountThresholdOfU{u} \leftarrow \hitCountThresholdOfU{u} + \EstimateP{pw}{\sigma}$
+		\State $\strikeThresholdOfU{u} \leftarrow \strikeThresholdOfU{u}$ + 1
+		\State Deny Access
+		\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm} 
+\subsection{Password Knapsack is $\NP$ hard}
+
+
+
+
+\begin{theorem}[Hardness of Password Knapsack]\label{appendix:ProofOfPasswordKnapsack}
+	Find optimal solution for password knapsack is $\NP$-hard.
+\end{theorem}
+
+\mypara{Proof:}
+We first formally define subset sum problem, and then prove password knapsack is $\NP$ hard by showing the reduction from subset sum to it.
+\begin{definition}[Subset Sum]
+	Given Partition instance $x_1,\ldots,x_{n} \in (0,2^m]$ and target sum value $T$. The goal is to find $S \subseteq [n]$ s.t. $\sum_{i\in S} x_i = T$? 
+\end{definition}
+\textbf{Reduction}: One can create the following password knapsack instance 
+\begin{itemize}
+	\item Set $\gamma = \sum_{i=1}^n x_i$,
+	\item Set $\psi = T/(2\gamma )< \frac{1}{2}$,
+	\item Set $CS(p_i)= f(p_{i}) = x_i/(2\gamma)$ for $i=1,\ldots, n$
+	\item Set $f(p_{last}) = 1-\sum_{i =1}^{n} p_i = 1/2 > \psi$. 
+\end{itemize}
+If $S$ exists for partition instance then attacker can use $S$ for password knapsack to crack $p_{last}+T/(2\gamma)$ passwords. On the other hand let $S$ be the optimal password knapsack solution such that $\sum_{i \in S} CS(p_i) \leq \psi$ then the attacker cracks at most $p_{last}+\sum_{i \in S} f(p_i) \leq 1/2 + \psi$ passwords. If equality holds then $\sum_{i \in S} f(p_i) = \psi$ which implies $\sum_{i \in S} x_i = T$ by definition of $\psi$.
+
+
+
+
+
+\subsection{Solving $\PK$ with Heruistics}
+In this section we supplement the missing details of algorithm $\DAB$ and $\FMPPF$ mentioned in \textbf{Section}~\ref{section:ExperimentDesign-subsection:SimulateAttacker}.  
+
+The $\DAB$ approach takes three inputs: a sorted password dictionary based on the ratio of actual popularity and estimated popularity $\frac{\EstP{pw}}{\TrueP{pw}}$: $\mathcal{P}_{\tilde{\Pi}} = \{pw_{\tilde{\Pi}(1)}, \ldots, pw_{\tilde{\Pi}(n)} \}$, attack budget $\Psi$ and K. The algorithm keeps placing passwords into the knapsack S based on the sorted order until it cannot further add some password $pw$. At this points, $\DAB$ compares $\TrueP{pw}$ with $\TrueP{S}$ and sets S to be the one with higher values. After that, the algorithm repeats the above process by scanning through the whole dictionary. At the end, since only $K$ passwords is allowed to be used for guessing, the algorithm returns $K$ passwords based on their actual probability
+
+
+Primary incentives of using this algorithm are 1) to take advantage of underestimated passwords and 2) to avoid (severely) overestimated ones. There are several drawbacks of $\DAB$. Firstly, the progress can be slow because priority is given to significantly underestimated passwords. Intuitively, for popular passwords ($\TrueP{pw}$ large) the ratio $\frac{\TrueP{pw}}{\EstP{pw}}$ is likely to be close to 1, therefore, attempts with popular ones are likely to be delayed. Secondly, unlike vanilla version of Knaspack, $\DAB$ may not yield a 2-approximation due to the additional constraint on the number of passwords one can place in the Knapsack. Third, computation cost is slightly higher for running $\DAB$ though both algorithms terminate reasonably quickly. %Thirdly, computation cost can still be a concern for large scale attacks. 
+
+
+
+\begin{algorithm}[!htb]
+	\caption{\textbf{$\DAB$ Attack }}\label{algorithm:Dantizig}
+	\textbf{Return:}  An array of password sorted in the order of guessing
+	\begin{algorithmic}[1]
+		\Function{$\DAB$ Attack}{$\mathcal{P}_{\tilde{\Pi}}, \Psi, M(T)$}
+		\State $S$= []
+		\While{$S$ changes}
+		\For{ $pw \in \mathcal{P}_{\tilde{\Pi}}$  }
+		\If{$\EstP{pw}$ $> \Psi$ }
+		\State \textbf{continue}
+		\EndIf
+		\If{$\EstP{S\cup pw}$ $< \Psi$ and $|S| \le$ $M(T)$  }
+		\State $S \leftarrow S \cup pw$ 
+		\ElsIf{$\TrueP{pw} > \TrueP{S}$ }
+		\State $S \leftarrow$ \{p\}
+		\EndIf
+		\EndFor
+		\EndWhile
+		\State \Return Top $M(T)$ passwords from $S$ based on actual popularity.
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}  
+
+
+
+
+
+An alternative to $\DAB$ is $\FMPPF$. It takes three input parameters $\mathcal{P} = pw_1, \ldots, pw_{n} \}$, attack budget $\Psi$ and $M(T)$ and selects passwords greedily. $\FMPPF$ differs from $\DAB$ in the following two aspects. Firstly, $\FMPPF$ uses a password dictioary sorted based on the actual popularity only, which can be easily obtained in reaf life. Secondly, to save computational cost $\FMPPF$  terminates once it finds $K$ passwords that are suitable for attacks and stop further explore the dictionary. The pseudo can be found in \textbf{Algorithm}~\ref{algorithm:FMPPF}
+
+In short time attack scenarios, $\FMPPF$ offers better chance of success than $\DAB$ by attempting popular ones first. For long term case, $\FMPPF$ should still be able to achieve almost optimal results given an abundant choice of passwords.  In fact, based on the empirical results (in \textbf{section}~\ref{section:ExperimentResult-security}), the performance of $\FMPPF$ is very close to theoretical upper bounds ($\Psi + \TrueP{pw_1}$ ). %Last but not least, $\FMPPF$ is computational efficient comparing to $\DAB$.
+
+
+\begin{algorithm}[!htb]
+	\caption{\textbf{$\FMPPF$ Approach}}\label{algorithm:FMPPF}
+	\textbf{Return:} An array of password sorted in the order of guessing
+	\begin{algorithmic}[1]
+		\Function{\FMPPF}{$\mathcal{P}, \Psi, M(T)$}
+		\State $S$= []
+		\For{ $pw \in \mathcal{P}$  }
+		\If{$\EstP{S \cup p}$ $< \Psi$ and $|S| < M(T)$  }
+		\State $S \leftarrow S \cup pw$ 
+		\EndIf
+		\EndFor
+		\State \Return S
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm} 
+
+
+
+
+\section{Simulating User's Mistakes}
+In this section we elaborate the details for simulating users' mistakes missing in \textbf{Section}~\ref{section:ExperimentDesign-subsection:SimulateUser}. To help reader visualize the process of simulating mistakes, we plot the flowchart in \textbf{figure}~\ref{figure:flowChartTypo}. The starting point is to simulate recall errors. Based on the empirical results of existing literatures\cite{CCS:CWPCR17,SP:CAAJR16}, we set the probability of makeing an recall error to 2.4\%. Recall that when we generate user's profile, each user has five ``passwords from other services". Therefore, we simulate recall error by choose one of them to be the \emph{password user intends to enter}. On top of this process, we further simulate typos (on the password intended to enter) with probability $\approx 5\%$. Condition on making typos, we simulate this step by choosing a type of typos with their conditional probability summarized in \textbf{Table}~\ref{Table:TypoTypes}.
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[height=2in,width=\linewidth]{Figures/Experiments/FlowChartTypo.png}
+		\caption{Flow Chart for Simulating Users' mistake}\label{figure:flowChartTypo}
+	\end{center}
+\end{figure}
+
+
+\begin{table}[h]
+	\begin{tabular}{|c|c|}
+		\hline
+		Typo Types           & Chance of Mistake(Rounded \%) \\ \hline
+		CapLock On           & 14                            \\ \hline
+		Shift First Char     & 4                             \\ \hline
+		One Extra Insertion  & 12                            \\ \hline
+		One Extra Deletion   & 12                            \\ \hline
+		One Char Replacement & 31                            \\ \hline
+		Transposition        & 4                             \\ \hline
+		Two Deletions         & 3                             \\ \hline
+		Two Insertions        & 3                             \\ \hline
+		Two Replacements      & 10                            \\ \hline
+		Others               & 8                             \\ \hline
+	\end{tabular}
+	\caption{Typo Distributions\cite{CCS:CWPCR17}}
+	\label{Table:TypoTypes}
+	\vspace{-1cm}
+\end{table}	
+
+
+\section{More Experimental Results}\label{appendix:experimentalResults}
+We provide more experimental results for curious readers to better understand the performance of $\DALock$ in multiple scenarios. To clearly demonstrates the impact of $\hitCountThreshold$ on security and usability we choose to visualize the following set of parameters $\{2^{-6}, 2^{-7},2^{-8},2^{-9}, 2^{-10}\}$(\textbf{Figure}~\ref{figure:appendix_attacker} and ~\ref{figure:appendix_usability}). When one set $\hitCountThreshold$ to an over conservative, e.g. $2^{-10}$ or smaller, dictionary attackers are not able to crack a significant portion of users accounst; however, usebility can be a concern as infrequent passwords burns $\hitCountThreshold_{u}$ quickly.(see curve CS-all($k:10,\hitCountThreshold:2^{-10},\epsilon$) across all figures). Another extreme approach is adopting aggresively large $\hitCountThreshold$, e.g. $2^{-6}$. Based on the plots (curve CS-all($k:10,\hitCountThreshold:2^{-6},\epsilon$)), the usability performance is satisfactory while security risk is enlarged (but still better than 3-strike). Beyond standard Count Sketch, we supplement more results on applying differential privacy to Count-Sketch(\textbf{Figure}~\ref{figure:appendix_attacker_dp} and  ~\ref{figure:appendix_usability_dp}). We discovered that differential privacy hardly has any negative impact on the performance of $\DALock$ especially when the dataset is large. Furthermore, we supplement more results on subsampling to show $\sigma_{r\%}$ is effective for a wide range of $\hitCountThreshold$ even when the sampling rate is 1\%.(\textbf{Figure}~\ref{figure:appendix_attacker_sample} and  ~\ref{figure:appendix_usability_sample}) Finally, we present the results of differentially private $\DALock$ trained on subsampling dataset $\SampledData{U_{1\%}}$. Despite the datasets become 100 times smaller, $\DP{\sigma_{1\%}}$ still performs reasonly well.(\textbf{Figure}~\ref{figure:appendix_attacker_dpandsample} and ~\ref{figure:appendix_usability_dpandsample}).
+
+\mypara{Almost Optimal Heruistic}  If one assumes that $\TrueP{pw} \approx \EstP{pw}$ for popular passwords, then theoretically $\Adversary$ can compromise at most $\hitCountThreshold + \TrueP{pw_1}$ users accounts by using $pw_1$ as holdout passwords. Based on our simulation results, we found that $\Adversary$ is very close to achieve such threshold by adopting $\FMPPF$ algorithm mentioned in \textbf{Section}~\ref{section:ExperimentDesign-subsection:SimulateAttacker}. To help readers identify this property, we highlight the upperbounds(e.g. $2^{-6} + \TrueP{pw_1}$ etc)
+
+\clearpage
+\begin{figure*}[htb]
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Attacker/Security_Appendix.png}
+	\caption{Security: $\sigma$}\label{figure:appendix_attacker}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Utility/Usability_Appendix.png}
+	\caption{Usability:  $\sigma$}\label{figure:appendix_usability}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Attacker/Security_Appendix_dp.png}
+	\caption{Security: $\DP{0.1}{\sigma}$}\label{figure:appendix_attacker_dp}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Utility/Usability_Appendix_dp.png} 
+	\caption{Usability: $\DP{0.1}{\sigma}$}\label{figure:appendix_usability_dp}
+\end{figure*}
+\begin{figure*}[htb]
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Attacker/Security_Appendix_1p.png}
+	\caption{Security: $\sigma_{1\%}$}\label{figure:appendix_attacker_sample}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Utility/Usability_Appendix_1p.png}
+	\caption{Usability: $\sigma_{1\%}$}\label{figure:appendix_usability_sample}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Attacker/Security_Appendix_dp_1p.png}
+	\caption{Security: $\DP{0.1}{\sigma_{1\%}}$ }\label{figure:appendix_attacker_dpandsample}
+	\includegraphics[width=\linewidth,height=4cm]{Figures/Experiments/Utility/Usability_Appendix_dp_1p.png} 
+	\caption{Usability:$\DP{0.1}{\sigma_{1\%}}$}\label{figure:appendix_usability_dpandsample}
+\end{figure*}
+\clearpage
+
+

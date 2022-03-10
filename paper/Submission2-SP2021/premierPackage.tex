@@ -1,0 +1,137 @@
+% !TEX root = main.tex
+
+% Packages All the Way
+
+\usepackage{balance,color,amsmath, alltt, xspace, epsfig, algorithm, subfigure, xcolor, multirow, psfrag,mathtools,comment, verbatim,algpseudocode,grffile}					
+\usepackage{xurl}
+
+%\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners]
+\tikzstyle{line} = [draw, -latex']
+
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+minimum height=2em]
+
+ \usepackage{graphicx} 
+\usepackage{caption}
+\captionsetup[figure]{font=small}
+%\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\hypersetup{breaklinks=true}
+
+
+% Variable Part
+\newcommand{\algoname}{DALock}					%Give a name to the algorithm/theorem
+
+
+\newcommand{\authnote}[3]{\textcolor{#2}{{\sf (#1's Note: {\sl{#3}})}}}
+\newcommand{\wuwei}{\authnote{Wuwei}{green}}
+\newcommand{\jeremiah}{\authnote{Jeremiah}{blue}}
+\newcommand{\ignore}[1]{}
+
+% Fixed/Constant Part:
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+\newcommand{\mypara}[1]{\vspace*{0.05in}\noindent\textbf{#1} \xspace}		% Bold paragraph title
+\newcommand{\says}[2]{{\color{blue}{#1 says: }{#2}}\xspace}					% Says 
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}								%\ceil	
+
+%---------- Macros for Table (Below)-------------
+\newcommand{\PasswordOfU}[1]{pw_{#1}}
+\newcommand{\PwOfU}[1]{pw_{#1}}
+\newcommand{\PsiOfU}{\Psi_u}
+\newcommand{\KOfU}{K_u}
+\newcommand{\PwProbEstimator}{\mathsf{Est}}
+\newcommand{\AllUser}{\mathcal{U}}
+\newcommand{\RankRPassword}[1]{pw_{#1}}
+\newcommand{\user}{u}
+\newcommand{\Lap}{\mathsf{Lap}\xspace}								% Laplace Noise
+\newcommand{\epsLap}[2]{\ensuremath{\mathsf{LAP(\frac{#2}{#1})}}\xspace} %Laplace Noise with #1 privacy budget (\epsilon) and #2 sensitivity
+\newcommand{\Adversary}{\ensuremath{\mathcal{A}}}							% Lazy \mathcal{A}
+\newcommand{\lazyref}[2]{\textbf{#1}~\ref{#2}}
+\newcommand{\ZX}{\ZXCVBN} 			%Lazy fancy ZXCVBN
+\newcommand{\loginActivity}[3]{\mathsf{L_{#1}(#2,#3)}}
+\newcommand{\ZXCVBN}{\mathsf{ZXCVBN}}
+\newcommand{\PCFG}{\mathsf{PCFG}}
+\newcommand{\Min}{\mathsf{Min}}
+\newcommand{\HashCat}{\mathsf{HashCat}}
+\newcommand{\NeuralNet}{\mathsf{NeuralNet}}
+\newcommand{\Markov}{\mathsf{Markov}}
+\newcommand{\Estimator}{\mathsf{Estimator}}
+\newcommand{\EstF}[1]{\textsf{Estimate}(#1)}
+\newcommand{\EstimateF}[2]{\textsf{Estimate}(#1,#2)}			%Estimate Frequency of p 
+\newcommand{\EstP}[1]{\textsf{p}(#1)}
+\newcommand{\EstimateP}[2]{\textsf{p}(#1,#2)}			%Estimate popularity of p 
+\newcommand{\MM}{\ensuremath{\mathcal{M}}}							% Lazy \mathcal{A}
+\newcommand{\FMPPF}{\ensuremath{\mathsf{FMPPF}}}							% Lazy \mathsf{FMPPF}
+\newcommand{\DAB}{\ensuremath{\mathsf{DAB}}}	
+\newcommand{\PK}{\ensuremath{\mathsf{PK}}}							% Lazy Password Knapsack
+\newcommand{\SampledData}[1]{\mathcal{D}_{{#1}}}
+\renewcommand{\Pr}[1]{\ensuremath{\mathsf{Pr} \left[#1\right] }\xspace}			% Fancy Pr
+\newcommand{\KPsiDALock}[2]{\ensuremath{(#1, #2)\text{-}\mathsf{DALock}}\xspace}		
+\newcommand{\hitCountThreshold}{\Psi}
+\newcommand{\hitCountThresholdOfU}[1]{\hitCountThreshold_{#1}}	
+\newcommand{\DP}[2]{\textsf{DP}(#1,#2)}
+\newcommand{\strikeThreshold}{K}	
+\newcommand{\strikeThresholdOfU}[1]{\strikeThreshold_{#1}}
+\newcommand{\DALock}{\mathsf{DALock}\xspace}	
+\newcommand{\AllPassword}{\mathcal{P}}
+\newcommand{\CountSketch}{\mathsf{CS}}
+\newcommand{\CountSketchCounter}{\mathsf{CS.T}}
+\newcommand{\CountSketchArray}{\mathsf{CS.ARRAY}}
+\newcommand{\EstProbOfPw}[2]{\ensuremath{\Estimator_{\mathsf{#2}}}\left(#1\right)}
+\newcommand{\TrueP}[1]{\ensuremath{\mathsf{P}\left(#1\right)}}
+\newcommand{\TrueF}[1]{\ensuremath{\mathsf{F}\left(#1\right)}}
+\newcommand{\TrueFInD}[2]{\ensuremath{\mathsf{F}\left(#1, #2\right)}}
+\newcommand{\CSWidth}{w}
+\newcommand{\CSDepth}{d}
+\newcommand{\TotalFreq}[1]{\ensuremath{\mathsf{TotalFreq}(#1)}}
+\newcommand{\Add}[2]{\ensuremath{\mathsf{Add}(#1,#2)}}
+\newcommand{\Initialize}[2]{\ensuremath{\mathsf{Initialize}(#1,#2)}}
+\newcommand{\HashFunRowD}{\ensuremath{\mathsf{h}_d}}
+\newcommand{\HashFunSign}{\ensuremath{\mathsf{h}_{\pm}}}
+\newcommand{\hitCountThresholdofUAtT}[2]{\hitCountThresholdOfU{#1}^{#2}}
+\newcommand{\strikeThresholdofUAtT}[2]{\strikeThresholdOfU{#1}^{#2}}
+%---------- Macros for Table (Above)-------------
+
+
+\newtheorem{definition}{Definition}
+\newtheorem{thm}{Theorem}[section]
+\newcommand{\NP}{\mathsf{NP}\xspace}
+
+\newcommand{\FPTAS}{\mathsf{FPTAS}\xspace}
+\newcommand{\PTAS}{\mathsf{PTAS}\xspace}
+\renewcommand{\P}{\mathsf{P}\xspace}	
+\newcommand{\SAT}{\mathsf{SAT}\xspace}	
+\newcommand{\TIME}{\mathsf{TIME}\xspace}
+\newcommand{\NPC}{\mathsf{NPC}\xspace}	
+\newcommand{\myexp}[1]{\ensuremath{e^{#1}}\xspace}						% exp
+
+
+%---------- Macros for General Setting-------------
+\algrenewcommand\algorithmicindent{1.0em}%
+\usepackage{tikz}
+\usetikzlibrary{matrix,calc,shapes}
+\tikzset{
+  treenode/.style = {shape=rectangle, rounded corners,
+                     draw, anchor=center,
+                     text width=5em, align=center,
+                     top color=white, bottom color=blue!20,
+                     inner sep=1ex},
+  decision/.style = {treenode, diamond, inner sep=0pt},
+  root/.style     = {treenode, font=\Large, bottom color=red!30},
+  env/.style      = {treenode, font=\ttfamily\normalsize},
+  finish/.style   = {root, bottom color=green!40},
+  dummy/.style    = {circle,draw}
+}
+\newcommand{\yes}{edge node [above] {yes}}
+\newcommand{\no}{edge  node [left]  {no}}
+
+
+

@@ -1,0 +1,55 @@
+% !TEX root = main.tex
+
+\section{Experimental Design} %Done
+We evaluate the performance of $\DALock$ through an extensive battery of empirical simulations. In this section we describe the modeling choices we made when designing our experiments. To simulate the authentication ecosystem we need to simulate the behavior of honest users,  the authentication server running $\DALock$  and an online attacker. 
+
+Briefly, when simulating users, we need to model the distribution over user passwords, the distribution over honest login mistakes (e.g., typos or recall errors) as well as the user's login schedule. When simulating the distribution over user passwords we use three empirical datasets (RockYou, Yahoo!, and LinkedIn) to define the underlying password distribution. We use a Poisson arrival process to model the frequency of user login attempts~\cite{AC:BloBluDat13}. Our model for user mistakes is informed by recent empirical studies of password typos~\cite{SP:CAAJR16,CCS:CWPCR17} and is augmented to simulate other mistakes i.e., recall errors.  The key question to answer for simulating an authentication server running $\DALock$ is how the (password) frequency oracle $\EstP{\cdot}$ is implemented. We consider two concrete implementations: password strength models (e.g., $\ZX$, Markov Models, Neural Networks) and (differentially private) count sketch. When simulating the attacker we consider an untargetted one who knows the distribution over user passwords as well as the DALock mechanism --- including the frequency oracle $\EstP{\cdot}$ . We leave the question of tuning DALock to protect against targetted online attackers~\cite{CCS:WZWYH16} as an important direction for future research. We elaborate on each of these key model components below.  We begin by with an overview of the empirical datasets $\SampledData{\AllUser}$ that we used in our experiments.
+
+
+\subsection{Experimental Datasets}\label{section:experiment:experiment_dataset} %Done
+%\wuwei{Move experimental datasets to experimental design / usability ?}
+In this work we use three publicly available password datasets: LinkedIn\cite{Dataset:LinkedIn}, {RockYou\cite{Dataset:RockYou}, and Yahoo\cite{SP:Bonneau12,NDSS:BloDatBon16}. In addition, we construct datasets via subsampling and password banning mentioned in \textbf{section}~\ref{section:ExperimentDesign-subsection:SimulateServer}. We summarize the characteristics of datasets in Table \ref{Table:dataset} to help reader catch the essence. 
+	
+	\textbf{RockYou}\cite{Dataset:RockYou} is a plaintext password corpus contains 14,341,564 unique passwords from a data leakage in 2009. RockYou stored user data in unencrypted database and leaked the passwords due to SQL-injection attacks. %To the best of our knowledge, RockYou is the largest leaked dataset with \textit{plaintext} passwords. 
+	
+	\textbf{LinkedIn}\cite{Dataset:LinkedIn} is a plaintext password corpus (partially) recovered constructed from a leakage in 2012. While the passwords were originally hashed LinkedIn was using a weak (unsalted) password hashing algorithm and almost all of the passwords in the dataset have been cracked. The dataset we used has approximately $68$ million passwords. We remark that the actual size of the leak is larger and that there is a larger (differentially private) frequency corpus based on $174+$ million LinkedIn passwords~\cite{harsha2020bicycle} that is publicly available. However, this dataset does not include any plaintext passwords. We chose to use the smaller dataset in our experiments so that we could evaluate with frequency oracles based on password models (e.g., $\ZXCVBN$, PCFGs, Neural Networks). 
+	
+	% Notice that the actual leakage is larger but we choose to use this version because the plaintexts are avaiable to us.   % This is the plaintext version
+	
+	\textbf{Yahoo!} The Yahoo! frequency corpus is a sanitized password frequency dataset collected~\cite{SP:Bonneau12}   with permission from Yahoo! It consists of anonymized password histograms representing almost 70 million Yahoo! users who logged into their account during a $48$ hour window in May, 2011. Yahoo! later authorized the public release of a differentially private version of this dataset~\cite{NDSS:BloDatBon16}. We remark that this frequency corpus does not contain any plaintext passwords, so we did not use password strength models in our experiments involving the Yahoo! dataset.
+	
+	\begin{table}[h]
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			Dataset     & Unique Passwords & Accounts & $\TrueP{pw_1}$\\ \hline
+			LinkedIn &  6,840,885              &68,361,064                    &1.53\%                         \\ \hline
+			RockYou  & 14,341,564                & 32,603,388                      & 0.89\%                    \\ \hline
+			CSDN &  6,840,885              &68,361,064                    &1.53\%                         \\ \hline
+			RockYou  & 14,341,564                & 32,603,388                      & 0.89\%                    \\ \hline
+		\end{tabular}
+		\caption{Summary of dataset}\label{table: datasetsummary}
+		\label{Table:dataset}
+		\vspace{-0.90cm}
+	\end{table}
+	\noindent \textbf{Remark:} In this work, we assume each dataset (approximately) reflects the actual distribution due to their tremendous size. To ease presentation, we refer ``actual distribution" to the datasets described in this section. We do acknowledge there could be misalignment between the above ones and their undelying true distributions. But we focus on analyzing popular passwords where empirical distribution and the real distribution will be very similar.
+	
+	\mypara{Ethics} Some of the datasets we used (LinkedIn\cite{Dataset:LinkedIn} and  {RockYou\cite{Dataset:RockYou}) contain passwords that were previously stolen and subsequently leaked online. The use of this data raises important ethical considerations. We remark that the password lists are already publicly available online, so our use of the data does not exacerbate the prior harm to users. We did not crack any new user passwords. Furthermore, the data we use has been cleaned of all identifying information beyond the passwords themselves.  In summary, we believe that our use of the leaked data will not exacerbate prior harm to users, and that the lockout mechanism we develop and evaluate may help to protect user passwords in the future.
+		
+		
+		
+		%\mypara{Subsampling Datasets} %\done We construct the subsampling datasets due to the incentives mentioned in \textbf{Section}~\ref{section:ExperimentDesign-subsection:SimulateServer}. To simulate the case of partial participation, we build datasets $\SampledData{\AllUser_{r\%}}$ by subsampling r\% of the users from actual distribution. For the rest of the discussion, we refer such obtained datasets as ``sampled datasets" and denote them with $\SampledData{\AllUser_{r\%}}$. In such experiment, we assume the server stores the sampled distribution, but attackers and users’ activities are simulated based on the actual distribution. 
+		
+		%In this work we demonstrate the results of using sampling rate 1\%, 5\%, and 10\%. We show that even $\sigma_{1\%}$,  $\CountSketch$ trained on $\SampledData{\AllUser_{1\%}}$, can be as effective as $\sigma$. 
+		
+		
+		
+		%\mypara{Banning Popular passwords} %\done
+		%Banning weak passwords is an orthogonal approach to eliminate overly popular passwords as we mentioned earlier. To test the performance of $\DALock$ under such circumstance, we construct new dataset by banning top 10,000 passwords from the origin dataset. Notice that we assume that users who are affected by banning will choose new passwords based on the remaining distribution. The reason for reassigning passwords is to ensure that the total number of users stays the same. 
+		
+		
+		
+		% In our simulations we assume that the attacker can access the same frequency oracle used by $\DALock$. For simplicity we also assume that the attacker can foresee the times at which an honest user will login and/or make mistakes and optimize his guessing pattern accordingly. In particular, the attacker might try to exploit passwords whose true popularity have been underestimated by the popularity estimator. We show that $\DALock$ implemented by all estimator can be effective. 
+		\input{ModelingUsers}
+		\input{ModelingAuthenticationServer} %Done
+		
+		\input{ModelingAttacker}

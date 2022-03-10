@@ -1,0 +1,22 @@
+% !TEX root = main.tex
+
+\begin{theorem}[Hardness of Password Knapsack]\label{appendix:ProofOfPasswordKnapsack}
+Find optimal solution for password knapsack is $\NP$-hard.
+\end{theorem}
+
+\mypara{Proof:}
+We first formally define subset sum problem, and then prove password knapsack is $\NP$ hard by showing the reduction from subset sum to it.
+\begin{definition}[Subset Sum]
+Given Partition instance $x_1,\ldots,x_{n} \in (0,2^m]$ and target sum value $T$. The  goal is to find $S \subseteq [n]$ s.t. $\sum_{i\in S} x_i = T$? 
+\end{definition}
+\textbf{Reduction}: One can create the following password knapsack instance 
+\begin{itemize}
+\item Set $\gamma = \sum_{i=1}^n x_i$,
+\item Set $\psi = T/(2\gamma )< \frac{1}{2}$,
+\item Set $CS(p_i)= f(p_{i}) = x_i/(2\gamma)$ for $i=1,\ldots, n$
+\item Set $f(p_{last}) = 1-\sum_{i =1}^{n} p_i = 1/2 > \psi$. 
+\end{itemize}
+If $S$ exists for partition instance then attacker can use $S$ for password knapsack to crack $p_{last}+T/(2\gamma)$ passwords. On the other hand let $S$ be the optimal password knapsack solution such that $\sum_{i \in S} CS(p_i) \leq \psi$ then the attacker cracks at most $p_{last}+\sum_{i \in S} f(p_i) \leq 1/2 + \psi$ passwords. If equality holds then $\sum_{i \in S} f(p_i) = \psi$ which implies $\sum_{i \in S} x_i = T$ by definition of $\psi$.
+
+
+%-----------Above in Appendix----------------

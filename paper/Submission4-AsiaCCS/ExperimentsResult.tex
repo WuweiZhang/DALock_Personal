@@ -1,0 +1,102 @@
+
+% !TEX root = main.tex
+\vspace*{-\baselineskip}
+\section{Experimental Results}\label{section:experimentalresult} %Done
+
+We empirically evaluated the performance of $\DALock$ under a variety of scenarios. During each simulation, we had $10^6$ honest users registered on an authentication server running $\DALock$. We simulate their login behaviors (see section~\ref{section:ExperimentDesign-subsection:SimulateUser}) over a period of $180$ days. To analyze usability, we ran simulations without an online password attacker and measured unwanted lockout rate, i.e., the fraction of user accounts locked due to honest mistakes. To analyze security, we added an untargeted online attacker $\Adversary$ (see section~\ref{section:ExperimentDesign-subsection:SimulateAttacker}) to the simulation and measured the fraction of user passwords $\Adversary$ cracked.  In our simulations, we do not consider other defenses the authentication server might adopt (e.g., banning malicious IPs) since our goal is to focus on the impact of the $\DALock$ mechanism.
+
+
+ \lazyref{Figure}{figure:UseSecTradeoff} directly compares the usability/security of $\DALock$ for a fixed banlist size $B=10^4$ as the hit count threshold $\hitCountThreshold$ varies. Similarly, \textbf{Figure}~\ref{figure:Security} (resp. \textbf{Figure}~\ref{figure:Usability}) highlights the security (resp. usability) of $\DALock$ as the banlist size varies holding the $\DALock$ parameters $k=10$ and $\hitCountThreshold$ constant. We repeat the simulation  instantiating the $\DALock$ frequency oracle with a differentially private count sketch, ZXCVBN, HashCat, Markov, Neural Networks, PCFG, and Min (a combination of HashCat, Markov, Neural Networks, and PCFG). 
+
+
+\mypara{Baseline} We used the classical $3$-strikes mechanism and the $10$-strikes mechanism (recommend by Brostoff et al.~\cite{brostoff2003ten} to improve usability) as baselines for comparisons. These two mechanisms are equivalent to $\KPsiDALock{3}{\hitCountThreshold=\infty}$ and $\KPsiDALock{10}{\hitCountThreshold=\infty}$ respectively. 
+
+
+
+
+
+
+
+ %In reality, it can also be a challenging task to obtain a ban-list of such size accurately. 
+
+% \jeremiah{Need more justification. Why did we focus on these banlist sizes?}
+
+\vspace*{-\baselineskip}
+\begin{figure*}[h]
+	\includegraphics[width=\linewidth, height = 4cm]{Figures/Experiments/B10000.png}
+		\vspace{-0.25in}
+	\caption{Usability/Security Tradeoff of $\DALock$ with $(B=10^4)$ }
+	\label{figure:UseSecTradeoff}
+	\includegraphics[width=\linewidth, height = 4cm]{Figures/Experiments/Attacker/SecurityBigPicture.png}
+	\vspace{-0.25in}
+	\caption{Security Measurement of $\DALock$ }\label{figure:Security}
+	\includegraphics[width=\linewidth, height = 4cm]{Figures/Experiments/Utility/UsabilityBigPicture.png}
+	\vspace{-0.25in}
+	\caption{Usability Measurement of $\DALock$ }\label{figure:Usability}
+	\vspace{-0.25in}
+\end{figure*}
+
+
+
+
+
+
+
+
+
+\subsection{Usability/Security Tradeoff}
+
+\label{section:ExperimentResult-security}
+While decreasing the hit count parameter $\hitCountThreshold$ improves security it also can have an adverse impact on usability.   
+\lazyref{Figure}{figure:UseSecTradeoff} directly compares the usability/security of $\DALock$ fixing the banlist size $B=10^4$, $k=10$ and varying $\hitCountThreshold$ to measure the $\%$ of cracked passwords (resp. $\%$ locked users) when the simulation includes (resp. excludes) an online attacker.  Legend entries are in the format FrequencyOracle(k) where we fixed the strike parameter $k=10$ in each of our simulations (excluding the 3-strike mechanism). In the appendix we repeated each simulations with different ban-list sizes  to show how $\DALock$ performs when the authentication server requires users to pick stronger passwords --- e.g., see Appendix, \lazyref{Figures}{fig:secuseB1000}.
+
+
+Our results indicate that one can improve {\em both} security and usability by replacing the classic 3-strikes throttling mechanism with $(10,\hitCountThreshold)-\DALock$ with a properly configured $\hitCountThreshold$. \lazyref{Figure}{figure:UseSecTradeoff} demonstrates that $\DALock$ offers a superior usability/security tradeoff when instantiated with a suitable frequence oracle i.e., 0.1-$\CountSketch$-all and $\ZXCVBN$. Similarly, our results demonstrate that $\KPsiDALock{10}{\hitCountThreshold}$  achieves comparable usability to classic $10$-strikes throttling mechanism while providing much stronger security guarantees. 
+
+$\DALock$ performs best when instantiated with the differentially private count sketch (0.1-$\CountSketch$-all). We use the notation $\epsilon$-CS-all(resp. $\epsilon$-CS-X\%) to refer to an $\epsilon$-differentially private count sketch trained on the entire dataset $\SampledData{\AllUser}$ (resp. a dataset $\SampledData{\AllUser_{X\%}}$ obtained by sampling X\% of user passwords from $\SampledData{\AllUser}$). Training the differerentially private count-sketch on $1\%$ of the data is effective for larger datasets such as RockYou and 000webhost, but the usability/security curve is inferior for smaller datasets such as bfield and brazzers. The performance of $\DALock$ when instantiated with other frequency oracles is incomparable to the classic $3$-strikes mechanism i.e., we can always set $\hitCountThreshold$ to improve security, but this occasionally results in {\em inferior} usability. 
+
+
+
+
+\vspace*{-\baselineskip}
+\subsection{Impact of Banlist Size on Security/Usability}\label{section:ExperimentResult-usability} 
+
+We demonstrate the usability/security impact of the ban-list size $B \in \{0, 5, 10, 100, 1000, 10000,100000\}$ holding the other $\DALock$ parameters $k=10$ and $\hitCountThreshold$ constant. We restricted our attention to ban-list size $B \leq 10^5$ as larger ones often require more than half of users to change their password in response, e.g., see \textbf{Figure}~\ref{figure: affectedusers} shows that banning $10^5$ passwords will already annoy approx. 10\% to 50\%  of users during account creation. 
+
+Our main simulation results are summarized in \textbf{Figure}~\ref{figure:Security} (for security) and \textbf{Figure}~\ref{figure:Usability} (for usability). The X-axis of each figure corresponds to the ban-list sizes (where $B= 0$ means there is no ban-list). And the Y-axis corresponds to the metric score (compromised user accounts (\%) / unwanted lockout rate (\%)) measured after 180 days. 
+
+\mypara{Implementation Details} In Figures \ref{figure:Security} and \ref{figure:Usability} we focus on the following (hand-picked) instantiations of DALock: 3-strikes(k:3, $\Psi$: $\infty$), 10-strikes(k:10, $\Psi$: $\infty$), 0.1-CS-all(k:10, $\Psi$:$2^{-10.0}$), 0.1-CS-5\%(k:10, $\Psi$:$2^{-10.0}$), ZXCVBN(k:10, $\Psi$:$2^{-9.0}$), Min(k:10, $\Psi$:$2^{-7.0}$), Hashcat(k:10, $\Psi$:$2^{-9.0}$), Markov(k:10, $\Psi$:$2^{-8.0}$), NeuralNet(k:10, $\Psi$:$2^{-8.0}$), and PCFG(k:10, $\Psi$:$2^{-8.0}$). Legend entries are in the format FrequencyOracle(k,$\hitCountThreshold$) where k and $\hitCountThreshold$ are the DALock throttling parameters (with the exception of the 3-strikes mechanism we fixed $k=10$ in all other simulations). \textbf{Figures}~\ref{figure:Security} and \ref{figure:Usability} highlight the performance of $\DALock$ for handpicked $\hitCountThreshold$ parameters (e.g., $\hitCountThreshold = 2^{-10}$ for differentially private count sketch). Additional plots in the appendix explore the impact of the privacy budget $\epsilon$ on the Count-Sketch frequency oracle as well the effect of smaller/larger subsampling rates. To save space \textbf{Figures}~\ref{figure:Security} and \ref{figure:Usability} only show results for the RockYou, 000webhost and bfield datasets while results for the brazzers, csdn and clixsense datasets can be found in the appendix (see \textbf{Figures} \ref{fig:securitydpcomparefull} and \ref{fig:usabilitydpcomparefull}).
+
+\vspace{-0.05cm}
+\mypara{Usability} Firstly, \lazyref{Figure}{figure:Usability} clearly demonstrates the unwanted lockout rate of (10,$\hitCountThreshold$)-DALock is substantially lower than the traditional 3-strikes mechanism. This result held robustly across all datasets irrespective of ban-list size and selection of frequency oracles. For example, on the CSDN dataset, the unwanted lockout rate is 4.0\% for  3-strikes and just 0.5\% for $\CountSketch$-all even when no ban-list is used $(B=0)$.
+
+Secondly, we find that increasing the ban-list size B reduces the unwanted lockout rate for $\DALock$. e.g., from 2.56\% to 0.08\% for 0.1-$\CountSketch$-all after banning 1000 passwords from bfield. Thus, while larger B values might annoy users during the account creation process, they positively impact the lockout rate. For instance, setting $B=10^5$ makes all $\DALock$ implementations achieve 10-strikes level lockout rate, i.e., $\approx 0\%$. While the unwanted lockout rate for DALock is negatively correlated with B we note that the lockout rate for the traditional K-strikes mechanism is uncorrelated with B since the hit-count is ignored. The lockout rate was approximately 4\% (3-strikes) and 0\% (10-strikes) for all datasets and ban-list sizes $B$. %\footnote{}
+
+%We provide more usability results in the Appendix exploring the impact of tunning $\hitCountThreshold$ for different frequency oracles, .
+
+Finally, we found that subsampling minimally affects the usability of $\CountSketch$-based $\DALock$ especially when trained on a larger dataset. In fact, when the dataset is small, the usability is often improved. For instance, based on the usability plot of bfield, the unwanted lockout rate of 0.1-$\CountSketch$-5\% is 1.25\%, which is marginally better than 0.1-$\CountSketch$-all (1.34\%). On larger datasets such as csdn and 000webhost this difference becomes negligible ($<$ 0.0001\%). 
+To understand why usability improves on smaller datasets we remark that subsampling often causes count sketches to underestimate password frequency (for undersampled passwords) which means that it will often take longer to reach the hit count threshold $\hitCountThreshold$. However, for the same reason, subsampling can negatively impact security when the dataset was already small (see section \ref{section:ExperimentResult-security}). 
+
+
+
+
+
+
+\mypara{Security} When we implement $\DALock$ with a differentially private count sketch ($\epsilon$=0.1-CS-all(k,$\hitCountThreshold$) or $\ZXCVBN$, we find that the total number of compromised accounts is strictly lower in comparison to the stringent 3-strikes mechanism. This result holds robustly for all datasets and all ban-list sizes. We further remark that (10,$\hitCountThreshold$)-$\DALock$ will always outperform the traditional 10-strikes mechanism, which is equivalent to (10, $\infty$)-$\DALock$. As a concrete example, consider the CSDN dataset. When B=0 and the authentication server adopts the 3-strikes mechanism, an attacker compromises approximately 5.8\% of user accounts compared with 1.4\% when adopting $\DALock$ (0.1-CS-all with parameters) or 4.6\% when we instantiate with $\ZXCVBN$. As a second concrete example, when we ban the top B=1000 password from bfield, then the attacker compromises 0.536\% (resp. 0.08\%) of user accounts when adopting the traditional 3-strikes mechanism (resp. $\DALock$ with a differentially private count sketch). Recall that the usability of $\DALock$ is also vastly superior to our 3-strikes mechanism in this setting.
+
+Secondly, we find that increasing the ban-list size B decreases the percentage of cracked passwords. This result holds whether we adopt $\DALock$ or the traditional 3-strikes mechanism though $\DALock$ (0.1-CS-ALL) continues to outperform 3-strikes even as the ban-list increases to B=$10^5$. In fact, we found that $\DALock$ with no ban-list (B=0) performs as well as 3-strikes with a larger ban-list of size B=$10^4$.  Thus, increasing B can have a positive usability and security impact though this policy might inconvenience more users during password registration.  
+
+Thirdly,  we find that 0.1-CS-5\% usually performs as well as 0.1-CS-all with an exception for smaller datasets when the ban-list size B is larger. For example, when we train our count sketch on bfield$_{5\%}$, the security of $\DALock$ is slightly worse than the traditional 3-strikes mechanism when B $>$10. This is because we do not have enough data to build an accurate differentially private frequency oracle and the attacker can exploit passwords whose frequencies are underestimated. We also find that other implementations of $\DALock$ (e.g., using frequency oracles like Neural Networks or Markov Models) often outperform 3-strikes, but as the ban-list size B grows larger, this is not always the case.
+
+%Similar to usability analysis, more security results can be found in the Appendix exploring the impact of tuning $\hitCountThreshold$ for different frequency oracles, the effect of smaller/larger subsampling rates, and the impact of the privacy budget $\epsilon$ on Count-Sketch.
+
+
+\vspace*{-\baselineskip}
+\subsection{Summary and Discussion}\label{sec:experiment_summary}
+
+We find that $\CountSketch$/$\ZXCVBN$-based $\DALock$ offers a superior security/usability tradeoff to the classical $\strikeThreshold$-strikes mechanism. $\DALock$ can also be reasonably instantiated with password strength models such as Markov Models, Probabilistic Context-Free Grammars, and Neural Networks to achieve a reasonable balance between security and usability. Our simulations also highlight the security {\em and} usability benefits of banning overly popular passwords given an accurate ban-list. Our analysis shows that the best security/usability tradeoffs can be obtained when the most popular passwords are banned \textit{and} when the $\DALock$ frequency oracle is instantiated with a differentially private count sketch or $\ZXCVBN$ password strength meter. For large organizations with at least $0.3$ million users, we recommend using a $\epsilon$=0.1 differentially private count sketch as the frequency oracle. While for smaller organizations, we recommend implementing $\DALock$ with $\ZXCVBN$. 
+
+
+%Our results demonstrate that one can easily replace 3-strikes mechanism with a properly configured $\KPsiDALock{10}{\Psi}$. In particular, it is easier to find an effective $\Psi$ for Count-Sketch based $\DALock$ compare to other frequency oracles. Implementing $\DALock$ with other frequency oracles is possible but requires more efforts on engineering the parameters. In addition, we show that $\sigma_{r\%}$ and $\sigma_{dp}$ are as effective as standard Count Sketch estimator $\sigma$ which makes deployment an easier task. Finally, we discovered that one can effectively eliminate dictionary attack by flatten password distribution (e.g. banning popular passwords). In this scenarios, one can still deploy $\DALock$ to achieve better utility. 
+
+

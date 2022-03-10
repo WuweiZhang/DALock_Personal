@@ -1,0 +1,63 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: ../cryptobib/abbrev0.bib
+Reallocated str_pool (elt_size=1) to 130000 items from 65000.
+Reallocated str_pool (elt_size=1) to 195000 items from 130000.
+Reallocated str_pool (elt_size=1) to 260000 items from 195000.
+Database file #2: ../cryptobib/crypto.bib
+Database file #3: ../otherReference/IEEEExample.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty journal in brostoff2003ten
+
+Done.
+You've used 55 entries,
+            4087 wiz_defined-function locations,
+            14366 strings with 231684 characters,
+and the built_in function-call counts, 44967 in all, are:
+= -- 3364
+> -- 1235
+< -- 336
++ -- 649
+- -- 222
+* -- 2175
+:= -- 6344
+add.period$ -- 138
+call.type$ -- 55
+change.case$ -- 96
+chr.to.int$ -- 855
+cite$ -- 56
+duplicate$ -- 3236
+empty$ -- 3870
+format.name$ -- 278
+if$ -- 10553
+int.to.chr$ -- 0
+int.to.str$ -- 55
+missing$ -- 644
+newline$ -- 208
+num.names$ -- 83
+pop$ -- 1681
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 3253
+stack$ -- 0
+substring$ -- 2055
+swap$ -- 2599
+text.length$ -- 51
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 55
+warning$ -- 1
+while$ -- 205
+width$ -- 57
+write$ -- 550
+(There was 1 warning)

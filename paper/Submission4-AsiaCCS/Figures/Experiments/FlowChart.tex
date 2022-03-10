@@ -1,0 +1,45 @@
+	% !TEX root = ../../main.tex
+\resizebox{\linewidth}{5cm}{
+	
+\begin{tikzpicture}
+	% Place nodes
+	\node [decision] (choosepwd) {\scriptsize{Recall password pw}};    
+	% Level 2
+	
+	\node [decision,  below left of=choosepwd,node distance=6cm] (wrongPwd) {\scriptsize{Recall Password pw'}}; \path [line] (choosepwd) -- node [near start,right] {2.4\%} (wrongPwd);
+	% Level 3
+	\node [decision, below left of=wrongPwd,node distance=2.5cm](wrongPwdTypo){\scriptsize{Typo pw'}}; \path [line] (wrongPwd) -- node [near start, left] {5\%}(wrongPwdTypo);
+	% Level 4
+	\node [block,below of=wrongPwdTypo,node distance=2.5cm](wrongPwdTypoTrans){\scriptsize{Transposition}}; \path [line] (wrongPwdTypo) -- node [near start, right] {4\%}(wrongPwdTypoTrans);
+		\node [block, left of=wrongPwdTypoTrans,node distance=2.5cm](wrongPwdTypoCap){\scriptsize{CAPLOCK}}; \path [line] (wrongPwdTypo) -| node [near start,above] {14\%}(wrongPwdTypoCap);
+	\node [block, right of=wrongPwdTypoTrans,node distance=2.5cm](wrongPwdTypoOther){\scriptsize{Others}}; \path [line] (wrongPwdTypo) -| node [near start,above] {4\%}(wrongPwdTypoOther);
+	\node [block, right of=wrongPwdTypoOther, node distance = 2.5cm](wrongPwdCorrect){\scriptsize{Type pw' correctly}};\path [line] (wrongPwd) -- node [near start,right] {95\%} (wrongPwdCorrect);
+	
+	\node [decision,  below right of=choosepwd,node distance=6cm] (rightPwd) {\scriptsize{Recall Correct Password pw}};             \path [line] (choosepwd) -- node [near start,right] {97.6\%}(rightPwd);
+	% Level 3
+	\node [decision, below right of=rightPwd,node distance=3cm](rightPwdTypo){\scriptsize{Typo pw}}; \path [line] (rightPwd) -- node [midway,right] {5\%}(rightPwdTypo);
+	% Level 4
+		\node [block, right of=wrongPwdCorrect, node distance = 2.5cm](rightPwdCorrect){\scriptsize{Type pw correctly}};\path [line] (rightPwd) -- node [near start,right] {95\%} (rightPwdCorrect);
+			\node [block, below of=rightPwdTypo,node distance=2.15cm](rightPwdTypoTrans){\scriptsize{Transposition}}; \path [line] (rightPwdTypo) -- node [near start,right] {4\%}(rightPwdTypoTrans);
+	\node [block, right of=rightPwdCorrect,node distance=2.5cm](rightPwdTypoCap){\scriptsize{CAPLOCK}}; \path [line] (rightPwdTypo) -| node [near start,above] {14\%}(rightPwdTypoCap);
+
+	\node [block, right of=rightPwdTypoTrans,node distance=2.5cm](rightPwdTypoOther){\scriptsize{Others}}; \path [line] (rightPwdTypo) -| node [near start,above] {4\%}(rightPwdTypoOther);
+	 \draw [dotted] (wrongPwdTypoCap) -- (wrongPwdTypoTrans);
+	 	\draw [dotted] (wrongPwdTypoTrans) -- (wrongPwdTypoOther);
+	 		 \draw [dotted] (rightPwdTypoCap) -- (rightPwdTypoTrans);
+	 	\draw [dotted] (rightPwdTypoTrans) -- (rightPwdTypoOther);
+	%\node [block, below of=identify] (evaluate) {evaluate candidate models};
+	%\node [block, left of=evaluate, node distance=2.5cm] (update) {update model};
+	% \node [decision, below of=evaluate] (decide) {is best candidate better?};
+	%\node [block, below of=decide, node distance=2.5cm] (stop) {stop};
+	% Draw edges
+	
+	
+	%\path [line] (identify) -- (evaluate);
+	%\path [line] (evaluate) -- (decide);
+	% \path [line] (decide) -| node [near start] {yes} (update);
+	%\path [line] (update) |- (identify);
+	% \path [line] (decide) -- node {no}(stop);
+	
+\end{tikzpicture}
+}

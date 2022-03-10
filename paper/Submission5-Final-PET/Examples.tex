@@ -1,0 +1,21 @@
+	% !TEX root = main.tex
+
+\mypara{Example 1: Usability} \textbf{Figure}~\ref{figure:introduction_security} {describes an example schenario where a user, who would have been locked out under the standard 3-strikes mechanism, is able to successfully authenticate with $\DALock$}. In this example scenario, our user John Smith registers an account with the somewhat complicated password ``J.S.UsesStr0ngpwd!'' based on the story ``John Smith uses a strong password.''. Later, when John tries to login into his account, John remembers the basic story, but not the exact password. Did he use his first name and his last name? With or without abbreviation? Did he add a punctuation mark at the end? Which letters are capitalized? If we use the 3-strikes mechanism, John Smith will be locked out quickly, e.g., after trying the incorrect password guesses ``JohnUseStrongPassword,'' ``JohnUsesStrongPassword,'' and ``JohnUsesStrongpwd.'' However, since none of these passwords is overly popular {we will not reach the hit count threshold and} $\DALock$ would allow our user to continue attempting to login until he remembers the correct password. 
+
+
+
+\mypara{Example 2: Security/Privacy} \textbf{Figure}~\ref{figure:introduction_security}  {also} compares $\DALock$ with the 10-strikes mechanism. In this scenario, our user registers an account with a weak password ``letmein.'' Because the password is globally popular, it is likely that an online attacker will attempt this password within the first $10$ guesses and break into the account. By contrast, $\DALock$ will quickly lock down the account after the attacker submits two globally popular passwords. 
+
+\vspace*{-\baselineskip}
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[height=2.0in,width=\linewidth]{Figures/Introduction/Usability.png}
+		\includegraphics[height=2.0in,width=\linewidth]{Figures/Introduction/Security.png}	
+\vspace*{-\baselineskip}
+		\caption{Security(Bottom) \& Usabilty(Top) Illustration}\label{figure:introduction_security}
+	\end{center}
+\end{figure}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+
+

@@ -1,0 +1,85 @@
+
+
+
+% !TEX root = main.tex
+
+
+\subsection{Modeling the Authentication Server}\label{section:ExperimentDesign-subsection:SimulateServer} %Done
+
+
+We model an authentication server running $\KPsiDALock{\strikeThreshold}{\hitCountThreshold}$ with various $\strikeThreshold$ and $\hitCountThreshold$ settings. Each time a user $u$ (or attacker pretending to be $u$) failed to login, the authentication server updates the parameters $\hitCountThresholdOfU{u}$ and $\strikeThresholdOfU{u}$ accordingly following the $\DALock$ mechanism. Notice that when $ \hitCountThreshold = \infty$, the authentication server is essentially running the classical $\strikeThreshold$-strikes lockout policy. To deploy $\DALock$ with a finite hit-count parameter $ \hitCountThreshold$, an authentication server needs to use a frequency oracle to update the hit count after each failed login attempt.  In this work, we consider two concrete approaches the authentication server might adopt: (differentially private) count sketch estimator and password strength models. We use $\EstimateP{pw}{\Estimator}$ to denote the estimated popularity (probability) of a password $pw$ estimated by the estimator $\Estimator$, e.g., given a count sketch $\sigma$ we would use  $\EstimateP{pw}{\sigma} = \frac{\mathbf{Estimate}(pw,\sigma)}{\mathbf{TotalFreq(\sigma)}}$. 
+
+
+
+%One real-world policy the authentication server might (optionally) adopt is to ban overly popular passwords to flatten the password distribution to protect user accounts against online attackers~\cite{HTS:SchHerMit10}. If the authentication server uses such a policy, then the frequency oracle would need to be adjusted accordingly to model the new password distribution. 
+
+
+
+\subsubsection{Differentially Private Count Sketch Estimator} 
+
+
+The first instantiation of $\EstimateP{\cdot}{\cdot} $ we consider is to build a count sketch estimator $\sigma_{\SampledData{\AllUser}} = \Add{\SampledData{\AllUser}}{\sigma} $ from dataset $\SampledData{\AllUser} $ directly. the authentication server would update the count sketch with the new password each time a new user registers. \footnote{The count sketch instantiations we consider would also support a remove operation which would allow the authentication server to handle password updates efficiently}. When deploying the count sketch estimator, there are several issues to consider: memory efficiency, privacy, sample size, and accuracy. 
+
+
+
+\textbf{Memory Efficiency} We instantiate the count sketch with parameters $d=5$ and $w=10^6$ so that the entire data structure requires just $20$ MB of space, which easily fits in modern RAM. 
+
+
+
+\textbf{Privacy} As we discussed earlier, one concern about storing a count sketch $\sigma_{\SampledData{\AllUser}} $ on the authentication server is that an offline attacker might steal this file and use the data-structure to help identify users' passwords. For example, if our user John Smith selects (resp. does not select) a rare password ``J.S.UsesStr0ngpwd!'' then we would expect that the true frequency of this password is $\TrueFInD{pw}{\SampledData{\AllUser} }=1$ (resp. $\TrueFInD{pw}{\SampledData{\AllUser} }=0$). If the count sketch estimator is overly accurate, then the attacker would be able to learn that one user (most likely John Smith) picked this password. Without a way to address these privacy concerns, an organization might be understandably wary of deploying a count sketch estimator.
+
+
+
+To address these privacy concerns, we consider an $\epsilon$-differentially private estimator $\sigma_{dp}$ = \textbf{DP($\epsilon,\sigma$)} in our experiments. During initialization, we add Laplace noise to the count sketch where the noise parameter scales with $\frac{d}{\epsilon}$. In our above example, differential privacy ensures that --- up to a multiplicative advantage $e^{\epsilon}$ --- an attacker cannot use the count sketch to distinguish between a dataset in which John Smith did (resp. did not) pick the password ``J.S.UsesStr0ngpwd!'. Notice that lower values of $\epsilon$ correspond to stronger privacy guarantees, e.g., we use $\epsilon=\infty$ to denote the case without applying differential privacy. In most of our experiments, we use small privacy parameters $\epsilon=0.1$, which is much smaller than the privacy parameters used in most prior deployments of differential privacy, e.g., $\epsilon = 0.5$ for releasing Yahoo! password corpus\cite{NDSS:BloDatBon16}, $\epsilon \ge 2$ for collecting users' information \cite{AppleDPTeam}, and $\epsilon \ge  \ln{81}$ for RAPPOR \cite{CCS:ErlPihKor14,USENIX:WBLJ17}. 
+
+
+
+\textbf{Sample Size and Accuracy} In general, the accuracy of a count sketch increases with the size of the password dataset. Suppose that the organization does not have millions of users or the dataset size is decreased because it allows users to ``opt-out” of the data collection. One natural question is whether one would be able to deploy a count sketch to obtain reliable frequency estimates under such circumstances. We investigate this question by subsampling smaller datasets to train the count sketch. Given a set $\AllUser$ of $N$ users, we use $\AllUser_{r\%}$ to denote a randomly subsampled set of $r\%$ of users. We use $\SampledData{\AllUser_{r\%}}$ to denote the corresponding subsampled password dataset and $\sigma_{r\%} = \Add{\SampledData{\AllUser}}{\sigma} $ to denote the count sketch trained on the subsampled data. The question is whether $\sigma_{r\%}$ can be as effective as $\sigma$ for deploying $\DALock$. 
+
+
+
+%\wuwei{Subsampling Results changed.}
+
+In our experiments, we consider the following sampling rates: 1\%, 5\%, and 10\%. Our empirical results show that using approx. 0.3 million passwords is sufficient to train a reliable count sketch. A substantially small sample like 1\% rate can hurt the performance of count sketch, especially when the original dataset $\SampledData{\AllUser}$ is already small. (e.g., bfield). On the positive side, if one picks an adequate sampling rate r (e.g., 10\%) or the original dataset size is sufficiently large (e.g., 000webhost), then $\sigma_{r\%}$ can perform nearly as good as $\sigma$.
+
+
+
+
+
+\textbf{Count Sketch with Ban-list} In our simulations, we also consider an authentication server that bans a list of popular passwords from the dataset to help flatten the password distribution and protect users against online attacks. Theoretical analysis indicates that directly banning the most popular passwords is one of the most effective ways to increase the minimum entropy of the password distribution~\cite{BKPS:ACMEC13}; On the other hand, banning too many of them may raise a usability concern – a large portion of users need to pick their new passwords (see \textbf{Figure}~\ref{figure: affectedusers}). One additional benefit of using a count sketch data structure is that it can be used to help implement such policy, i.e., if a user attempts to register with password $pw$ and $\EstimateP{pw}{\sigma}$ is already too high, then the user will be asked to pick a different password~\cite{HTS:SchHerMit10}.
+
+\begin{figure}[htb]	
+	\begin{center}
+		\vspace{-0.2cm}
+		\includegraphics[height=2in,width=\linewidth]{Figures/Experiments/AffectedUsers}
+		\vspace{-0.5cm}
+		\caption{Affected Users vs Ban-List size}\label{figure: affectedusers}
+		\vspace{-0.5cm}
+	\end{center}
+\end{figure}
+
+We evaluate the performance of $\DALock$ in the presence of various sizes of ban lists. Recall that we let $\SampledData{\AllUser, B}$ denote the dataset $\SampledData{\AllUser}$ with the $B$ most common passwords removed. To model how affected users will update their passwords in response to the ban-list, we follow the normalized probabilities model of ~\cite{BKPS:ACMEC13}. In particular, we assume users who are affected by the policy will pick new passwords following the empirical distribution induced by $\SampledData{\AllUser, B}$. We then train the count sketch based on the updated dataset, i.e., $\sigma_{\SampledData{\AllUser, B}} = Add(\SampledData{\AllUser, B})$.
+
+
+
+
+\subsubsection{Frequency Oracle from Password Models}
+
+
+As we previously discussed, there are several reasons why an organization might prefer not to use a count sketch for frequency estimation, e.g., privacy concerns or insufficient users. One alternative approach is to instantiate the frequency oracle with a password model. This could be a heuristic password strength meter, a more sophisticated model based on Neural Networks, Probabilistic Context-Free Grammars,  Markov Models, or an empirical estimate based on Hashcat. The primary advantage of this approach is that the model can be deployed immediately even before an organization has any users and there are no privacy concerns. 
+
+
+We adopted the $\ZXCVBN$ password strength meter~\cite{USENIX:Wheeler16} as prior empirical studies demonstrate that it is one of the most accurate password strength meters \cite{CCS:GolDur18}. In addition, we used the Password Guessing Service (PGS) \cite{USENIX:USBCCKKMMS15,USENIX:MUSKBCC16} to obtain guessing numbers for Neural Network, PCFG, Hashcat, and Markov Models ---  we also considered the minimum guessing number across all four models as suggested in \cite{USENIX:USBCCKKMMS15}. For example, if a password $pw$ had a guessing number $g$, we might estimate that $\EstP{pw_i} =1/g$. One challenge we need to address is that the estimates we obtain do not always yield a probability distribution. E.g., for $\ZXCVBN$ we have $\sum_{i=1}^{10000}\EstP{pw_i} \gg 1$ where $i$ ranges over the top $10^4$ remaining passwords in the dataset. Thus, before deploying the frequency estimator for $\DALock$, we renormalized our estimates so that $\sum_{i=1}^{\max\{10^4, B\}}\EstP{pw_i} =1$ where $B$ is the number of banned passwords. \footnote{We estimate $\sum_{i=1}^{\max\{B\}}\EstP{pw_i}$ by sampling 20,000 users' passwords from $\SampledData{\AllUser,B}$ when B $\ge$ $10^5$ to avoid submitting too many requests to PGS.}
+
+
+
+
+
+% \wuwei{Address sampling later.}
+
+
+
+
+%\jeremiah{Update to $\max\{10^4, B\}$ where $B$ is the number of banned passwords. Briefly, mention that we use sampling to estimate this quantity when utilizing the PGS with larger banlist sizes $B=10^5$. }. 
+
+

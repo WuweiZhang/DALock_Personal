@@ -1,0 +1,115 @@
+
+\documentclass[]{article}
+\usepackage{fullpage}
+\usepackage{amsmath, alltt, amssymb, xspace, epsfig, algorithm, url, subfigure, xcolor, multirow, psfrag,mathtools}
+\usepackage{comment, verbatim}
+\usepackage{algpseudocode}
+\usepackage{balance}
+\usepackage{color}
+
+\begin{document}
+
+\title{Privacy-Preserving Count-Sketch Updating Mechanism Using Encryption}
+\date{\today}
+\maketitle
+
+\section{Algorithm}
+\subsection{Challenges}
+\begin{itemize}
+	\item limited size for the encrypted field.
+	\item accuracy.
+	\item differentiation of different / first time login.
+	\item Existence of internal CS(not visible by anyone)
+	\item ``Publish period": requires every (or almost every) user to login during a certain amount of time.
+\end{itemize}
+\subsection{Overview}
+The data curator (secretly or not) stores the following: For each user U, it stores 
+\begin{itemize}
+	\item U: Username
+	\item S:  Salt of the user. 
+	\item H(P,S): Hashed value of U's password concatenated with Salt S
+	\item $PubK_{U}$:  Public key of this user. Notice there is a Private $PrivK_U$
+	\item $Enc_{PubK_{U}}$(V), where V is a vector indicates the update of sketch count
+	\end{itemize}
+In addition, the data curator maintains a public Count-Sketch represents the distribution of the passwords. The CS is updated after a time window (T) or batch size (B) is large enough to avoid privacy leak.  
+\subsection{Secret Sharing}
+Let $\mathcal{H}$ be the hash function of Count-Sketch. To simplify the discussion, we skip salt and assume CS has depth 1.
+\begin{algorithm}[!htb]
+	\caption{\textbf{Secret Sharing}}
+	\textbf{Input: } User name $U$, password $p$
+	\begin{algorithmic}[1]
+	\Function{Secret Sharing}{$U, p$}
+		\State $h \leftarrow \mathcal{H}(p)$
+		\State $p' \leftarrow $ randomly generated password
+		\State $h' \leftarrow \mathcal{H}(p')$ 
+		\State Let $G$ and $G'$ be the groups that are responsible for maintaining the counts for $\mathcal{H}(p)$ and $\mathcal{H}(p')$
+		\State $ v \leftarrow$ randomly generated vector, $|v| = |G|$, $\sum_i v = 1$
+		\For{$\forall g \in G$}
+			\State Update $g$'s encrypted value by Enc($v_g$, $PubK_g$).
+		\EndFor
+		\State $ v' \leftarrow$ randomly generated vector, $|v'| = |G'|$, $\sum_i v' = 0$
+		\For{$\forall g \in G'$}
+			\State Update $g$'s encrypted value by Enc($v'_g$, $PubK_g$).
+		\EndFor
+    	\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!htb]
+	\caption{\textbf{Publish}}
+	\textbf{Input: } User name $U$, password $p$, global sketch count table SC
+	\begin{algorithmic}[1]
+	\Function{Secret Sharing}{$U, p$}
+		\State $PrivK_U \leftarrow$ retrieve Private Key from $p$.
+		\State $\mathcal{H(\cdot)}, c \leftarrow Dec(PrivK_U, Enc_{PubK_{U}}(H(\cdot),c))$
+		\State $SC[H(\cdot)] \leftarrow  SC[H(\cdot)]  + c$ 
+    	\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+The adversary, who controls $\rho$ percentage of the accounts, can not derive which password count has been updated with high probability. In worst case, let the group size be g. The adversary observe the exact count of $\rho\cdot\frac{N}{g}$ groups. 
+
+
+\textbf{Solution:}
+\begin{itemize}
+	\item Assume $|U| >> |\mathcal{P}|$, where $|U|$ is the total number of users and $|\mathcal{P}|$ is the size of the published table size. Each user will be in charge of one or a few number of slots in the published table.
+	\item When a user u login, $p_u$ should be increased by 1. let V be the users who are in charge of $p_u$. u sends each user v $\in$ V an encrypted fractional count (can be negative number) $c_{u,v}$, where $\sum c_{p ,u,v}  = 1$. 
+	\item u pick another random slot in the table (corresponding to a random password p'). Repeat the above step, the only difference is $\sum c_{p',u,v}  = 1$
+\end{itemize}
+
+An adversary observe the change for the encrypted part cannot infer which password get is the new password with more than 0.5 of chance. In addition, the adversary is not able to identify the person who login.
+\section{Adversary Models}
+\subsection{The Ultimate Adversary (Online version)}
+\begin{itemize}
+	\item Have some knowledge about the population distribution
+	\item Can access CS data structure.
+	\item Have limited computational power and is rational. To be more specific, each adversaries is willing to try k guesses and willing to register $\rho$ percentage of the total accounts.
+	\item The adversary can control/register at most $\rho$ percentage of the total account to gain an advantage. (And possibly view the secretly maintained data for those accounts)
+	
+\end{itemize}
+\subsection{By Knowledge}
+In this section we only consider what an adversary knows about the information.
+
+An outside adversary shall be able to observe the published Sketch-Count. In addition,  the adversary may or may not has his/her prior believe $p_u$ for each user u.
+
+An insider is a malicious or compromised data curator. When this happens, the attacker can see the secretly maintained table. This essentially makes the attack \textbf{offline}. 
+
+
+\textbf{Summary:} Since the idea of the project is ``lock-out mechanism". Therefore we shall assume the adversary does not have the access to the secretly stored data.
+\subsection{By Abilities (Computational Power and Resources)}
+In this section, we consider what an adversary can do based on his/her computational power. Here we assume that the adversary is rational. 
+
+\begin{itemize}
+	\item Register new accounts
+\end{itemize}
+
+\subsubsection{Registeration}
+The abilities to register \textbf{massive amount} of new accounts can alter the distribution of the password. Therefore the adversary may not be punished not so seriously. This can be effective at the earlier stages of releasing. We need to setup T and B wisely to avoid adversary abusing distribution.
+
+\subsubsection{Guessing}
+The adversary is able to guess k times so the adversary can be profit from whole massive online attacks. 	
+\section{Update Mechanism}
+\subsubsection{Parameters}
+
+
+\end{document}

@@ -1,0 +1,776 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{50}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Bai, Blocki, and Harsha}{Bai
+  et~al\mbox{.}}{2021}]%
+        {GameSec:BaiBloHar21}
+\bibfield{author}{\bibinfo{person}{Wenjie Bai}, \bibinfo{person}{Jeremiah
+  Blocki}, {and} \bibinfo{person}{Ben Harsha}.}
+  \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Password Strength Signaling: A Counter-Intuitive
+  Defense Against Password Cracking}. In \bibinfo{booktitle}{\emph{Decision and
+  Game Theory for Security}}, \bibfield{editor}{\bibinfo{person}{Branislav
+  Bo{\v{s}}ansk{\'y}}, \bibinfo{person}{Cleotilde Gonzalez},
+  \bibinfo{person}{Stefan Rass}, {and} \bibinfo{person}{Arunesh Sinha}} (Eds.).
+  \bibinfo{publisher}{Springer International Publishing},
+  \bibinfo{address}{Cham}, \bibinfo{pages}{334--353}.
+\newblock
+\showISBNx{978-3-030-90370-1}
+
+
+\bibitem[\protect\citeauthoryear{Blocki, Blum, and Datta}{Blocki
+  et~al\mbox{.}}{2013a}]%
+        {AC:BloBluDat13}
+\bibfield{author}{\bibinfo{person}{Jeremiah Blocki}, \bibinfo{person}{Manuel
+  Blum}, {and} \bibinfo{person}{Anupam Datta}.}
+  \bibinfo{year}{2013}\natexlab{a}.
+\newblock \showarticletitle{Naturally Rehearsing Passwords}. In
+  \bibinfo{booktitle}{\emph{Advances in Cryptology -- {ASIACRYPT}~2013,
+  Part~II}} \emph{(\bibinfo{series}{Lecture Notes in Computer Science},
+  Vol.~\bibinfo{volume}{8270})}, \bibfield{editor}{\bibinfo{person}{Kazue Sako}
+  {and} \bibinfo{person}{Palash Sarkar}} (Eds.). \bibinfo{publisher}{Springer,
+  Heidelberg, Germany}, \bibinfo{address}{Bengalore, India},
+  \bibinfo{pages}{361--380}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-3-642-42045-0_19}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Blocki, Datta, and Bonneau}{Blocki
+  et~al\mbox{.}}{2016}]%
+        {NDSS:BloDatBon16}
+\bibfield{author}{\bibinfo{person}{Jeremiah Blocki}, \bibinfo{person}{Anupam
+  Datta}, {and} \bibinfo{person}{Joseph Bonneau}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Differentially Private Password Frequency Lists}.
+  In \bibinfo{booktitle}{\emph{{ISOC} Network and Distributed System Security
+  Symposium -- {NDSS}~2016}}. \bibinfo{publisher}{The Internet Society},
+  \bibinfo{address}{San Diego, CA, USA}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Blocki, Harsha, and Zhou}{Blocki
+  et~al\mbox{.}}{2018}]%
+        {SP:BloHarZho18}
+\bibfield{author}{\bibinfo{person}{Jeremiah Blocki}, \bibinfo{person}{Benjamin
+  Harsha}, {and} \bibinfo{person}{Samson Zhou}.}
+  \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{On the Economics of Offline Password Cracking}. In
+  \bibinfo{booktitle}{\emph{2018 {IEEE} Symposium on Security and Privacy}}.
+  \bibinfo{publisher}{{IEEE} Computer Society Press}, \bibinfo{address}{San
+  Francisco, CA, USA}, \bibinfo{pages}{853--871}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/SP.2018.00009}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Blocki, Komanduri, Procaccia, and
+  Sheffet}{Blocki et~al\mbox{.}}{2013b}]%
+        {BKPS:ACMEC13}
+\bibfield{author}{\bibinfo{person}{Jeremiah Blocki}, \bibinfo{person}{Saranga
+  Komanduri}, \bibinfo{person}{Ariel Procaccia}, {and} \bibinfo{person}{Or
+  Sheffet}.} \bibinfo{year}{2013}\natexlab{b}.
+\newblock \showarticletitle{Optimizing password composition policies}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the fourteenth ACM conference on
+  Electronic commerce}}. ACM, \bibinfo{pages}{105--122}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bonneau}{Bonneau}{2012}]%
+        {SP:Bonneau12}
+\bibfield{author}{\bibinfo{person}{Joseph Bonneau}.}
+  \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{The Science of Guessing: Analyzing an Anonymized
+  Corpus of 70 Million Passwords}. In \bibinfo{booktitle}{\emph{2012 {IEEE}
+  Symposium on Security and Privacy}}. \bibinfo{publisher}{{IEEE} Computer
+  Society Press}, \bibinfo{address}{San Francisco, CA, USA},
+  \bibinfo{pages}{538--552}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/SP.2012.49}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Bonneau, Herley, {van Oorschot}, and
+  Stajano}{Bonneau et~al\mbox{.}}{2012}]%
+        {SP:BHVS12}
+\bibfield{author}{\bibinfo{person}{Joseph Bonneau}, \bibinfo{person}{Cormac
+  Herley}, \bibinfo{person}{Paul~C. {van Oorschot}}, {and}
+  \bibinfo{person}{Frank Stajano}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{The Quest to Replace Passwords: A Framework for
+  Comparative Evaluation of Web Authentication Schemes}. In
+  \bibinfo{booktitle}{\emph{2012 {IEEE} Symposium on Security and Privacy}}.
+  \bibinfo{publisher}{{IEEE} Computer Society Press}, \bibinfo{address}{San
+  Francisco, CA, USA}, \bibinfo{pages}{553--567}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/SP.2012.44}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Brostoff and Sasse}{Brostoff and
+  Sasse}{2003}]%
+        {brostoff2003ten}
+\bibfield{author}{\bibinfo{person}{Sacha Brostoff} {and}
+  \bibinfo{person}{Angela Sasse}.} \bibinfo{year}{2003}\natexlab{}.
+\newblock \showarticletitle{Ten strikes and you're out: Increasing the number
+  of login attempts can improve password usability}.
+\newblock  (\bibinfo{date}{07} \bibinfo{year}{2003}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Bursztein, Bethard, Fabry, Mitchell, and
+  Jurafsky}{Bursztein et~al\mbox{.}}{2010}]%
+        {SP:BBFNJ10}
+\bibfield{author}{\bibinfo{person}{Elie Bursztein}, \bibinfo{person}{Steven
+  Bethard}, \bibinfo{person}{Celine Fabry}, \bibinfo{person}{John~C. Mitchell},
+  {and} \bibinfo{person}{Daniel Jurafsky}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{How Good Are Humans at Solving {CAPTCHAs}? {A}
+  Large Scale Evaluation}. In \bibinfo{booktitle}{\emph{2010 {IEEE} Symposium
+  on Security and Privacy}}. \bibinfo{publisher}{{IEEE} Computer Society
+  Press}, \bibinfo{address}{Berkeley/Oakland, CA, USA},
+  \bibinfo{pages}{399--413}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/SP.2010.31}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Bursztein, Martin, and Mitchell}{Bursztein
+  et~al\mbox{.}}{2011}]%
+        {CCS:BurMarMit11}
+\bibfield{author}{\bibinfo{person}{Elie Bursztein}, \bibinfo{person}{Matthieu
+  Martin}, {and} \bibinfo{person}{John~C. Mitchell}.}
+  \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Text-based {CAPTCHA} strengths and weaknesses}. In
+  \bibinfo{booktitle}{\emph{ACM CCS 2011: 18th Conference on Computer and
+  Communications Security}}, \bibfield{editor}{\bibinfo{person}{Yan Chen},
+  \bibinfo{person}{George Danezis}, {and} \bibinfo{person}{Vitaly Shmatikov}}
+  (Eds.). \bibinfo{publisher}{{ACM} Press}, \bibinfo{address}{Chicago,
+  Illinois, USA}, \bibinfo{pages}{125--138}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/2046707.2046724}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Charikar, Chen, and {Farach-Colton}}{Charikar
+  et~al\mbox{.}}{2002}]%
+        {ICALP:ChaCheFar02}
+\bibfield{author}{\bibinfo{person}{Moses Charikar}, \bibinfo{person}{Kevin~C.
+  Chen}, {and} \bibinfo{person}{Martin {Farach-Colton}}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Finding Frequent Items in Data Streams}. In
+  \bibinfo{booktitle}{\emph{ICALP 2002: 29th International Colloquium on
+  Automata, Languages and Programming}} \emph{(\bibinfo{series}{Lecture Notes
+  in Computer Science}, Vol.~\bibinfo{volume}{2380})},
+  \bibfield{editor}{\bibinfo{person}{Peter Widmayer},
+  \bibinfo{person}{Francisco~Triguero Ruiz}, \bibinfo{person}{Rafael~Morales
+  Bueno}, \bibinfo{person}{Matthew Hennessy}, \bibinfo{person}{Stephan
+  Eidenbenz}, {and} \bibinfo{person}{Ricardo Conejo}} (Eds.).
+  \bibinfo{publisher}{Springer, Heidelberg, Germany}, \bibinfo{address}{Malaga,
+  Spain}, \bibinfo{pages}{693--703}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1007/3-540-45465-9_59}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Chatterjee, Athayle, Akhawe, Juels, and
+  Ristenpart}{Chatterjee et~al\mbox{.}}{2016}]%
+        {SP:CAAJR16}
+\bibfield{author}{\bibinfo{person}{Rahul Chatterjee}, \bibinfo{person}{Anish
+  Athayle}, \bibinfo{person}{Devdatta Akhawe}, \bibinfo{person}{Ari Juels},
+  {and} \bibinfo{person}{Thomas Ristenpart}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{{pASSWORD} {tYPOS} and How to Correct Them
+  Securely}. In \bibinfo{booktitle}{\emph{2016 {IEEE} Symposium on Security and
+  Privacy}}. \bibinfo{publisher}{{IEEE} Computer Society Press},
+  \bibinfo{address}{San Jose, CA, USA}, \bibinfo{pages}{799--818}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1109/SP.2016.53}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Chatterjee, Woodage, Pnueli, Chowdhury, and
+  Ristenpart}{Chatterjee et~al\mbox{.}}{2017}]%
+        {CCS:CWPCR17}
+\bibfield{author}{\bibinfo{person}{Rahul Chatterjee}, \bibinfo{person}{Joanne
+  Woodage}, \bibinfo{person}{Yuval Pnueli}, \bibinfo{person}{Anusha Chowdhury},
+  {and} \bibinfo{person}{Thomas Ristenpart}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{The {TypTop} System: Personalized Typo-Tolerant
+  Password Checking}. In \bibinfo{booktitle}{\emph{ACM CCS 2017: 24th
+  Conference on Computer and Communications Security}},
+  \bibfield{editor}{\bibinfo{person}{Bhavani~M. Thuraisingham},
+  \bibinfo{person}{David Evans}, \bibinfo{person}{Tal Malkin}, {and}
+  \bibinfo{person}{Dongyan Xu}} (Eds.). \bibinfo{publisher}{{ACM} Press},
+  \bibinfo{address}{Dallas, TX, USA}, \bibinfo{pages}{329--346}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3133956.3134000}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Dantzig}{Dantzig}{1957}]%
+        {Dan:OR57}
+\bibfield{author}{\bibinfo{person}{George~B Dantzig}.}
+  \bibinfo{year}{1957}\natexlab{}.
+\newblock \showarticletitle{Discrete-variable extremum problems}.
+\newblock \bibinfo{journal}{\emph{Operations research}} \bibinfo{volume}{5},
+  \bibinfo{number}{2} (\bibinfo{year}{1957}), \bibinfo{pages}{266--288}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Dwork}{Dwork}{2011}]%
+        {ECS:Dwork11}
+\bibfield{author}{\bibinfo{person}{Cynthia Dwork}.}
+  \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Differential privacy}.
+\newblock \bibinfo{journal}{\emph{Encyclopedia of Cryptography and Security}}
+  (\bibinfo{year}{2011}), \bibinfo{pages}{338--340}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Dwork, Naor, Pitassi, Rothblum, and
+  Yekhanin}{Dwork et~al\mbox{.}}{2010a}]%
+        {ITCS:DNPRY10}
+\bibfield{author}{\bibinfo{person}{Cynthia Dwork}, \bibinfo{person}{Moni Naor},
+  \bibinfo{person}{Toniann Pitassi}, \bibinfo{person}{Guy~N. Rothblum}, {and}
+  \bibinfo{person}{Sergey Yekhanin}.} \bibinfo{year}{2010}\natexlab{a}.
+\newblock \showarticletitle{Pan-Private Streaming Algorithms}. In
+  \bibinfo{booktitle}{\emph{ICS 2010: 1st Innovations in Computer Science}},
+  \bibfield{editor}{\bibinfo{person}{Andrew Chi-Chih Yao}} (Ed.).
+  \bibinfo{publisher}{Tsinghua University Press}, \bibinfo{address}{Tsinghua
+  University, Beijing, China}, \bibinfo{pages}{66--80}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Dwork, Naor, Pitassi, Rothblum, and
+  Yekhanin}{Dwork et~al\mbox{.}}{2010b}]%
+        {dwork2010pan}
+\bibfield{author}{\bibinfo{person}{Cynthia Dwork}, \bibinfo{person}{Moni Naor},
+  \bibinfo{person}{Toniann Pitassi}, \bibinfo{person}{Guy~N Rothblum}, {and}
+  \bibinfo{person}{Sergey Yekhanin}.} \bibinfo{year}{2010}\natexlab{b}.
+\newblock \showarticletitle{Pan-Private Streaming Algorithms.}. In
+  \bibinfo{booktitle}{\emph{ics}}. \bibinfo{pages}{66--80}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Erlingsson, Pihur, and Korolova}{Erlingsson
+  et~al\mbox{.}}{2014}]%
+        {CCS:ErlPihKor14}
+\bibfield{author}{\bibinfo{person}{{\'U}lfar Erlingsson},
+  \bibinfo{person}{Vasyl Pihur}, {and} \bibinfo{person}{Aleksandra Korolova}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{{RAPPOR}: Randomized Aggregatable
+  Privacy-Preserving Ordinal Response}. In \bibinfo{booktitle}{\emph{ACM CCS
+  2014: 21st Conference on Computer and Communications Security}},
+  \bibfield{editor}{\bibinfo{person}{Gail-Joon Ahn}, \bibinfo{person}{Moti
+  Yung}, {and} \bibinfo{person}{Ninghui Li}} (Eds.). \bibinfo{publisher}{{ACM}
+  Press}, \bibinfo{address}{Scottsdale, AZ, USA}, \bibinfo{pages}{1054--1067}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/2660267.2660348}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Florencio and Herley}{Florencio and
+  Herley}{2007}]%
+        {FloHer:WWW07}
+\bibfield{author}{\bibinfo{person}{Dinei Florencio} {and}
+  \bibinfo{person}{Cormac Herley}.} \bibinfo{year}{2007}\natexlab{}.
+\newblock \showarticletitle{A large-scale study of web password habits}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 16th international conference on
+  World Wide Web}}. ACM, \bibinfo{pages}{657--666}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Freeman, Jain, D{\"u}rmuth, Biggio, and
+  Giacinto}{Freeman et~al\mbox{.}}{2016}]%
+        {NDSS:FJDBG16}
+\bibfield{author}{\bibinfo{person}{David Freeman}, \bibinfo{person}{Sakshi
+  Jain}, \bibinfo{person}{Markus D{\"u}rmuth}, \bibinfo{person}{Battista
+  Biggio}, {and} \bibinfo{person}{Giorgio Giacinto}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Who Are You? {A} Statistical Approach to Measuring
+  User Authenticity}. In \bibinfo{booktitle}{\emph{{ISOC} Network and
+  Distributed System Security Symposium -- {NDSS}~2016}}.
+  \bibinfo{publisher}{The Internet Society}, \bibinfo{address}{San Diego, CA,
+  USA}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{ghacks}{ghacks}{2011}]%
+        {News:AmazonTypo}
+ghacks \bibinfo{year}{2011}\natexlab{}.
+\newblock \bibinfo{title}{Amazon Login May Accept Password Variants}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{https://www.ghacks.net/2011/01/31/amazon-login-may-accept-password-variants/}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Golla, Bailey, and D{\"u}rmuth}{Golla
+  et~al\mbox{.}}{2017}]%
+        {SOUPS:GBD17}
+\bibfield{author}{\bibinfo{person}{Maximilian Golla}, \bibinfo{person}{Daniel~V
+  Bailey}, {and} \bibinfo{person}{Markus D{\"u}rmuth}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{" I want my money back!" Limiting Online
+  Password-Guessing Financially.}. In \bibinfo{booktitle}{\emph{SOUPS}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Golla and D{\"u}rmuth}{Golla and
+  D{\"u}rmuth}{2018}]%
+        {CCS:GolDur18}
+\bibfield{author}{\bibinfo{person}{Maximilian Golla} {and}
+  \bibinfo{person}{Markus D{\"u}rmuth}.} \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{On the Accuracy of Password Strength Meters}. In
+  \bibinfo{booktitle}{\emph{ACM CCS 2018: 25th Conference on Computer and
+  Communications Security}}, \bibfield{editor}{\bibinfo{person}{David Lie},
+  \bibinfo{person}{Mohammad Mannan}, \bibinfo{person}{Michael Backes}, {and}
+  \bibinfo{person}{XiaoFeng Wang}} (Eds.). \bibinfo{publisher}{{ACM} Press},
+  \bibinfo{address}{Toronto, ON, Canada}, \bibinfo{pages}{1567--1582}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3243734.3243769}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Gordon and Lundeen}{Gordon and
+  Lundeen}{2014}]%
+        {gordon2014efficiently}
+\bibfield{author}{\bibinfo{person}{Ariel Gordon} {and}
+  \bibinfo{person}{Richard~Allen Lundeen}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \bibinfo{title}{Efficiently throttling user authentication}.
+\newblock
+\newblock
+\newblock
+\shownote{US Patent 8,898,752.}
+
+
+\bibitem[\protect\citeauthoryear{{Herley} and {Van Oorschot}}{{Herley} and {Van
+  Oorschot}}{2012}]%
+        {PasswordPersistence}
+\bibfield{author}{\bibinfo{person}{C. {Herley}} {and} \bibinfo{person}{P. {Van
+  Oorschot}}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{A Research Agenda Acknowledging the Persistence of
+  Passwords}.
+\newblock \bibinfo{journal}{\emph{IEEE Security Privacy}} \bibinfo{volume}{10},
+  \bibinfo{number}{1} (\bibinfo{date}{Jan} \bibinfo{year}{2012}),
+  \bibinfo{pages}{28--36}.
+\newblock
+\showISSN{1558-4046}
+\urldef\tempurl%
+\url{https://doi.org/10.1109/MSP.2011.150}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Kogan, Manohar, and Boneh}{Kogan
+  et~al\mbox{.}}{2017}]%
+        {CCS:KogManBon17}
+\bibfield{author}{\bibinfo{person}{Dmitry Kogan}, \bibinfo{person}{Nathan
+  Manohar}, {and} \bibinfo{person}{Dan Boneh}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{T/Key: Second-Factor Authentication From Secure
+  Hash Chains}. In \bibinfo{booktitle}{\emph{ACM CCS 2017: 24th Conference on
+  Computer and Communications Security}},
+  \bibfield{editor}{\bibinfo{person}{Bhavani~M. Thuraisingham},
+  \bibinfo{person}{David Evans}, \bibinfo{person}{Tal Malkin}, {and}
+  \bibinfo{person}{Dongyan Xu}} (Eds.). \bibinfo{publisher}{{ACM} Press},
+  \bibinfo{address}{Dallas, TX, USA}, \bibinfo{pages}{983--999}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3133956.3133989}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Komanduri, Shay, Kelley, Mazurek, Bauer,
+  Christin, Cranor, and Egelman}{Komanduri et~al\mbox{.}}{2011}]%
+        {KSKMBCCE:SIGCHI11}
+\bibfield{author}{\bibinfo{person}{Saranga Komanduri}, \bibinfo{person}{Richard
+  Shay}, \bibinfo{person}{Patrick~Gage Kelley}, \bibinfo{person}{Michelle~L
+  Mazurek}, \bibinfo{person}{Lujo Bauer}, \bibinfo{person}{Nicolas Christin},
+  \bibinfo{person}{Lorrie~Faith Cranor}, {and} \bibinfo{person}{Serge
+  Egelman}.} \bibinfo{year}{2011}\natexlab{}.
+\newblock \showarticletitle{Of passwords and people: measuring the effect of
+  password-composition policies}. In \bibinfo{booktitle}{\emph{Proceedings of
+  the SIGCHI Conference on Human Factors in Computing Systems}}. ACM,
+  \bibinfo{pages}{2595--2604}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kulik and Shachnai}{Kulik and
+  Shachnai}{2010}]%
+        {kulik2010there}
+\bibfield{author}{\bibinfo{person}{Ariel Kulik} {and} \bibinfo{person}{Hadas
+  Shachnai}.} \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{There is no EPTAS for two-dimensional knapsack}.
+\newblock \bibinfo{journal}{\emph{Inform. Process. Lett.}}
+  \bibinfo{volume}{110}, \bibinfo{number}{16} (\bibinfo{year}{2010}),
+  \bibinfo{pages}{707--710}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Malone and Maher}{Malone and Maher}{2012}]%
+        {DavKev:WWW12}
+\bibfield{author}{\bibinfo{person}{David Malone} {and} \bibinfo{person}{Kevin
+  Maher}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Investigating the distribution of password
+  choices}. In \bibinfo{booktitle}{\emph{Proceedings of the 21st international
+  conference on World Wide Web}}. ACM, \bibinfo{pages}{301--310}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Melicher, Ur, Segreti, Komanduri, Bauer,
+  Christin, and Cranor}{Melicher et~al\mbox{.}}{2016}]%
+        {USENIX:MUSKBCC16}
+\bibfield{author}{\bibinfo{person}{William Melicher}, \bibinfo{person}{Blase
+  Ur}, \bibinfo{person}{Sean~M. Segreti}, \bibinfo{person}{Saranga Komanduri},
+  \bibinfo{person}{Lujo Bauer}, \bibinfo{person}{Nicolas Christin}, {and}
+  \bibinfo{person}{Lorrie~Faith Cranor}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Fast, Lean, and Accurate: Modeling Password
+  Guessability Using Neural Networks}. In \bibinfo{booktitle}{\emph{USENIX
+  Security 2016: 25th {USENIX} Security Symposium}},
+  \bibfield{editor}{\bibinfo{person}{Thorsten Holz} {and}
+  \bibinfo{person}{Stefan Savage}} (Eds.). \bibinfo{publisher}{{USENIX}
+  Association}, \bibinfo{address}{Austin, TX, USA}, \bibinfo{pages}{175--191}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Naor, Pinkas, and Ronen}{Naor
+  et~al\mbox{.}}{2019}]%
+        {CCS:NaoPinRon19}
+\bibfield{author}{\bibinfo{person}{Moni Naor}, \bibinfo{person}{Benny Pinkas},
+  {and} \bibinfo{person}{Eyal Ronen}.} \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{How to (not) Share a Password: Privacy Preserving
+  Protocols for Finding Heavy Hitters with Adversarial Behavior}. In
+  \bibinfo{booktitle}{\emph{ACM CCS 2019: 26th Conference on Computer and
+  Communications Security}}, \bibfield{editor}{\bibinfo{person}{Lorenzo
+  Cavallaro}, \bibinfo{person}{Johannes Kinder}, \bibinfo{person}{XiaoFeng
+  Wang}, {and} \bibinfo{person}{Jonathan Katz}} (Eds.).
+  \bibinfo{publisher}{{ACM} Press}, \bibinfo{pages}{1369--1386}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3319535.3363204}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Pinkas and Sander}{Pinkas and Sander}{2002}]%
+        {CCS:PinSan02}
+\bibfield{author}{\bibinfo{person}{Benny Pinkas} {and} \bibinfo{person}{Tomas
+  Sander}.} \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Securing Passwords Against Dictionary Attacks}. In
+  \bibinfo{booktitle}{\emph{ACM CCS 2002: 9th Conference on Computer and
+  Communications Security}}, \bibfield{editor}{\bibinfo{person}{Vijayalakshmi
+  Atluri}} (Ed.). \bibinfo{publisher}{{ACM} Press},
+  \bibinfo{address}{Washington, DC, USA}, \bibinfo{pages}{161--170}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/586110.586133}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{prowebscraper.}{prowebscraper.}{2019}]%
+        {captchaSolver}
+prowebscraper. \bibinfo{year}{2019}\natexlab{}.
+\newblock \bibinfo{title}{Top 10 Captcha Solving Services Compared}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{https://prowebscraper.com/blog/top-10-captcha-solving-services-compared/}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Renaud, English, Wynne, and Weber}{Renaud
+  et~al\mbox{.}}{2014}]%
+        {FiveStrikes:REWW14}
+\bibfield{author}{\bibinfo{person}{Karen Renaud}, \bibinfo{person}{Rosanne
+  English}, \bibinfo{person}{Thomas Wynne}, {and} \bibinfo{person}{Florian
+  Weber}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{You Have Three Tries Before Lockout. Why Three?.}.
+  In \bibinfo{booktitle}{\emph{HAISA}}. \bibinfo{pages}{101--111}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{RockYou}{RockYou}{2010}]%
+        {Dataset:RockYou}
+RockYou \bibinfo{year}{2010}\natexlab{}.
+\newblock \bibinfo{title}{RockYou Password Corpus}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{http://downloads.skullsecurity.org/passwords/rockyou. txt.bz2.}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Sandhu, Desa, and Ganesan}{Sandhu
+  et~al\mbox{.}}{2005}]%
+        {sandhu2005system}
+\bibfield{author}{\bibinfo{person}{Ravi Sandhu}, \bibinfo{person}{Colin Desa},
+  {and} \bibinfo{person}{Karuna Ganesan}.} \bibinfo{year}{2005}\natexlab{}.
+\newblock \bibinfo{title}{System and method for password throttling}.
+\newblock
+\newblock
+\newblock
+\shownote{US Patent 6,883,095.}
+
+
+\bibitem[\protect\citeauthoryear{Schechter, Herley, and Mitzenmacher}{Schechter
+  et~al\mbox{.}}{2010}]%
+        {HTS:SchHerMit10}
+\bibfield{author}{\bibinfo{person}{Stuart Schechter}, \bibinfo{person}{Cormac
+  Herley}, {and} \bibinfo{person}{Michael Mitzenmacher}.}
+  \bibinfo{year}{2010}\natexlab{}.
+\newblock \showarticletitle{Popularity is everything: A new approach to
+  protecting passwords from statistical-guessing attacks}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 5th USENIX conference on Hot
+  topics in security}}. USENIX Association, \bibinfo{pages}{1--8}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Schechter, Tian, and Herley}{Schechter
+  et~al\mbox{.}}{2019}]%
+        {EuroSP:THS19}
+\bibfield{author}{\bibinfo{person}{Stuart Schechter}, \bibinfo{person}{Yuan
+  Tian}, {and} \bibinfo{person}{Cormac Herley}.}
+  \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{StopGuessing: Using guessed passwords to thwart
+  online guessing}. In \bibinfo{booktitle}{\emph{2019 IEEE European Symposium
+  on Security and Privacy (EuroS\&P)}}. IEEE, \bibinfo{pages}{576--589}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Schecter and Herley}{Schecter and
+  Herley}{2016}]%
+        {SchHer:MSR18}
+\bibfield{author}{\bibinfo{person}{S Schecter} {and} \bibinfo{person}{C
+  Herley}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{The Binomial Ladder Frequency Filter and its
+  Applications to Shared Secrets}.
+\newblock \bibinfo{journal}{\emph{MSR-TR-2018-18}} (\bibinfo{year}{2016}).
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Team}{Team}{[n.d.]}]%
+        {AppleDPTeam}
+\bibfield{author}{\bibinfo{person}{Apple Differential~Privacy Team}.}
+  \bibinfo{year}{[n.d.]}\natexlab{}.
+\newblock \bibinfo{title}{Learning with Privacy at Scale}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{https://machinelearning.apple.com/2017/12/06/learning-with-privacy-at-scale.html}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Retrieved 25, Apr. 2019.}
+
+
+\bibitem[\protect\citeauthoryear{Ur, Segreti, Bauer, Christin, Cranor,
+  Komanduri, Kurilova, Mazurek, Melicher, and Shay}{Ur et~al\mbox{.}}{2015}]%
+        {USENIX:USBCCKKMMS15}
+\bibfield{author}{\bibinfo{person}{Blase Ur}, \bibinfo{person}{Sean~M.
+  Segreti}, \bibinfo{person}{Lujo Bauer}, \bibinfo{person}{Nicolas Christin},
+  \bibinfo{person}{Lorrie~Faith Cranor}, \bibinfo{person}{Saranga Komanduri},
+  \bibinfo{person}{Darya Kurilova}, \bibinfo{person}{Michelle~L. Mazurek},
+  \bibinfo{person}{William Melicher}, {and} \bibinfo{person}{Richard Shay}.}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Measuring Real-World Accuracies and Biases in
+  Modeling Password Guessability}. In \bibinfo{booktitle}{\emph{USENIX Security
+  2015: 24th {USENIX} Security Symposium}},
+  \bibfield{editor}{\bibinfo{person}{Jaeyeon Jung} {and}
+  \bibinfo{person}{Thorsten Holz}} (Eds.). \bibinfo{publisher}{{USENIX}
+  Association}, \bibinfo{address}{Washington, DC, USA},
+  \bibinfo{pages}{463--481}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{{von Ahn}, Blum, Hopper, and Langford}{{von
+  Ahn} et~al\mbox{.}}{2003}]%
+        {EC:vBHL03}
+\bibfield{author}{\bibinfo{person}{Luis {von Ahn}}, \bibinfo{person}{Manuel
+  Blum}, \bibinfo{person}{Nicholas~J. Hopper}, {and} \bibinfo{person}{John
+  Langford}.} \bibinfo{year}{2003}\natexlab{}.
+\newblock \showarticletitle{{CAPTCHA}: Using Hard {AI} Problems for Security}.
+  In \bibinfo{booktitle}{\emph{Advances in Cryptology -- {EUROCRYPT}~2003}}
+  \emph{(\bibinfo{series}{Lecture Notes in Computer Science},
+  Vol.~\bibinfo{volume}{2656})}, \bibfield{editor}{\bibinfo{person}{Eli Biham}}
+  (Ed.). \bibinfo{publisher}{Springer, Heidelberg, Germany},
+  \bibinfo{address}{Warsaw, Poland}, \bibinfo{pages}{294--311}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1007/3-540-39200-9_18}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Von~Ahn, Maurer, McMillen, Abraham, and
+  Blum}{Von~Ahn et~al\mbox{.}}{2008}]%
+        {von2008recaptcha}
+\bibfield{author}{\bibinfo{person}{Luis Von~Ahn}, \bibinfo{person}{Benjamin
+  Maurer}, \bibinfo{person}{Colin McMillen}, \bibinfo{person}{David Abraham},
+  {and} \bibinfo{person}{Manuel Blum}.} \bibinfo{year}{2008}\natexlab{}.
+\newblock \showarticletitle{recaptcha: Human-based character recognition via
+  web security measures}.
+\newblock \bibinfo{journal}{\emph{Science}} \bibinfo{volume}{321},
+  \bibinfo{number}{5895} (\bibinfo{year}{2008}), \bibinfo{pages}{1465--1468}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wang, Cheng, Wang, Huang, and Jian}{Wang
+  et~al\mbox{.}}{2017b}]%
+        {TIFS17:WCWPXG}
+\bibfield{author}{\bibinfo{person}{Ding Wang}, \bibinfo{person}{Haibo Cheng},
+  \bibinfo{person}{Ping Wang}, \bibinfo{person}{Xinyi Huang}, {and}
+  \bibinfo{person}{Gaopeng Jian}.} \bibinfo{year}{2017}\natexlab{b}.
+\newblock \showarticletitle{Zipf’s law in passwords}.
+\newblock \bibinfo{journal}{\emph{IEEE Transactions on Information Forensics
+  and Security}} \bibinfo{volume}{12}, \bibinfo{number}{11}
+  (\bibinfo{year}{2017}), \bibinfo{pages}{2776--2791}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wang, Jian, Huang, and Wang}{Wang
+  et~al\mbox{.}}{2014}]%
+        {EPRINT:WJHW14}
+\bibfield{author}{\bibinfo{person}{Ding Wang}, \bibinfo{person}{Gaopeng Jian},
+  \bibinfo{person}{Xinyi Huang}, {and} \bibinfo{person}{Ping Wang}.}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \bibinfo{title}{Zipf's Law in Passwords}.
+\newblock \bibinfo{howpublished}{Cryptology ePrint Archive, Report 2014/631}.
+\newblock
+\newblock
+\shownote{\url{http://eprint.iacr.org/2014/631}.}
+
+
+\bibitem[\protect\citeauthoryear{Wang and Wang}{Wang and Wang}{2016}]%
+        {ESORICS:WanWan16}
+\bibfield{author}{\bibinfo{person}{Ding Wang} {and} \bibinfo{person}{Ping
+  Wang}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{On the Implications of {Zipf}'s Law in Passwords}.
+  In \bibinfo{booktitle}{\emph{ESORICS~2016: 21st European Symposium on
+  Research in Computer Security, Part~I}} \emph{(\bibinfo{series}{Lecture Notes
+  in Computer Science}, Vol.~\bibinfo{volume}{9878})},
+  \bibfield{editor}{\bibinfo{person}{Ioannis~G. Askoxylakis},
+  \bibinfo{person}{Sotiris Ioannidis}, \bibinfo{person}{Sokratis~K. Katsikas},
+  {and} \bibinfo{person}{Catherine~A. Meadows}} (Eds.).
+  \bibinfo{publisher}{Springer, Heidelberg, Germany},
+  \bibinfo{address}{Heraklion, Greece}, \bibinfo{pages}{111--131}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1007/978-3-319-45744-4_6}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Wang, Zhang, Wang, Yan, and Huang}{Wang
+  et~al\mbox{.}}{2016}]%
+        {CCS:WZWYH16}
+\bibfield{author}{\bibinfo{person}{Ding Wang}, \bibinfo{person}{Zijian Zhang},
+  \bibinfo{person}{Ping Wang}, \bibinfo{person}{Jeff Yan}, {and}
+  \bibinfo{person}{Xinyi Huang}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Targeted Online Password Guessing: An
+  Underestimated Threat}. In \bibinfo{booktitle}{\emph{ACM CCS 2016: 23rd
+  Conference on Computer and Communications Security}},
+  \bibfield{editor}{\bibinfo{person}{Edgar~R. Weippl}, \bibinfo{person}{Stefan
+  Katzenbeisser}, \bibinfo{person}{Christopher Kruegel},
+  \bibinfo{person}{Andrew~C. Myers}, {and} \bibinfo{person}{Shai Halevi}}
+  (Eds.). \bibinfo{publisher}{{ACM} Press}, \bibinfo{address}{Vienna, Austria},
+  \bibinfo{pages}{1242--1254}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/2976749.2978339}
+\showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Wang, Blocki, Li, and Jha}{Wang
+  et~al\mbox{.}}{2017a}]%
+        {USENIX:WBLJ17}
+\bibfield{author}{\bibinfo{person}{Tianhao Wang}, \bibinfo{person}{Jeremiah
+  Blocki}, \bibinfo{person}{Ninghui Li}, {and} \bibinfo{person}{Somesh Jha}.}
+  \bibinfo{year}{2017}\natexlab{a}.
+\newblock \showarticletitle{Locally Differentially Private Protocols for
+  Frequency Estimation}. In \bibinfo{booktitle}{\emph{USENIX Security 2017:
+  26th {USENIX} Security Symposium}}, \bibfield{editor}{\bibinfo{person}{Engin
+  Kirda} {and} \bibinfo{person}{Thomas Ristenpart}} (Eds.).
+  \bibinfo{publisher}{{USENIX} Association}, \bibinfo{address}{Vancouver, BC,
+  Canada}, \bibinfo{pages}{729--745}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Wheeler}{Wheeler}{2016}]%
+        {USENIX:Wheeler16}
+\bibfield{author}{\bibinfo{person}{Daniel~Lowe Wheeler}.}
+  \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{zxcvbn: Low-Budget Password Strength Estimation}.
+  In \bibinfo{booktitle}{\emph{USENIX Security 2016: 25th {USENIX} Security
+  Symposium}}, \bibfield{editor}{\bibinfo{person}{Thorsten Holz} {and}
+  \bibinfo{person}{Stefan Savage}} (Eds.). \bibinfo{publisher}{{USENIX}
+  Association}, \bibinfo{address}{Austin, TX, USA}, \bibinfo{pages}{157--173}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Ye, Tang, Fang, Zhu, Feng, Xu, Chen, and
+  Wang}{Ye et~al\mbox{.}}{2018}]%
+        {CCS:YTFZFX18}
+\bibfield{author}{\bibinfo{person}{Guixin Ye}, \bibinfo{person}{Zhanyong Tang},
+  \bibinfo{person}{Dingyi Fang}, \bibinfo{person}{Zhanxing Zhu},
+  \bibinfo{person}{Yansong Feng}, \bibinfo{person}{Pengfei Xu},
+  \bibinfo{person}{Xiaojiang Chen}, {and} \bibinfo{person}{Zheng Wang}.}
+  \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{Yet Another Text Captcha Solver: {A} Generative
+  Adversarial Network Based Approach}. In \bibinfo{booktitle}{\emph{ACM CCS
+  2018: 25th Conference on Computer and Communications Security}},
+  \bibfield{editor}{\bibinfo{person}{David Lie}, \bibinfo{person}{Mohammad
+  Mannan}, \bibinfo{person}{Michael Backes}, {and} \bibinfo{person}{XiaoFeng
+  Wang}} (Eds.). \bibinfo{publisher}{{ACM} Press}, \bibinfo{address}{Toronto,
+  ON, Canada}, \bibinfo{pages}{332--348}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3243734.3243754}
+\showDOI{\tempurl}
+
+
+\end{thebibliography}

@@ -1,0 +1,44 @@
+	% !TEX root = main.tex
+
+	%\vspace{-0.1in}
+\section{Introduction}\label{sec: Introduction}
+
+An online password attacker repeatedly attempts to login to an authentication server submitting a different guess for the target user's password on each attempt. The human tendency to pick weak (``low-entropy'') passwords has been well documented, e.g., ~\cite{SP:Bonneau12}. An untargeted online attacker will typically submit the most popular password choices consistent with the password requirements (e.g., ``Password1''). In contrast, a targeted attacker~\cite{CCS:WZWYH16} might additionally incorporate background knowledge about the specific target user (e.g., birthdate, phone number, anniversary, etc.). To protect users against online attackers, most authentication servers incorporate some form of throttling mechanism. In particular, the $\strikeThreshold$-strikes mechanism temporarily locks a user's account if $\strikeThreshold$-consecutive incorrect passwords are attempted within a predefined time (e.g., $24$ hours). Setting the lockout parameter $\strikeThreshold$ induces a classic security-usability trade-off. Selecting small values of $\strikeThreshold$ (e.g., $\strikeThreshold=3$) provides better protection against online attackers but may result in many unwanted lockouts when an honest user miss-types (or miss-remembers) their password. Selecting a larger value of $\strikeThreshold$ (e.g., $\strikeThreshold=10$) will reduce the unwanted lockout rate but may increase vulnerability to online attacks. 
+
+
+
+Bonneau et al.~\cite{SP:BHVS12} considered many proposed replacements for password authentication, finding that all proposals have some drawbacks compared with passwords. For example, passwords are easier to revoke than biometrics. Similarly, hardware tokens are expensive and require users to carry them around. By contrast, passwords are easy to deploy and do not require users to carry anything around. Put simply, we have not found a ``silver bullet'' replacement for passwords. Thus, despite all of their shortcomings (and many attempts to replace them), passwords will likely remain entrenched as the dominant form of authentication on the internet~\cite{PasswordPersistence}. Thus, protecting passwords against online attacks without locking out legitimate users remains a crucial challenge for the foreseeable future~\cite{DictionaryAttack:Microsoft}. 
+
+
+One approach to protect users against online guessing attacks is to adopt strict password composition policies to prevent users from selecting weak passwords. However, it has been well documented that users dislike restrictive policies and often respond in predictable ways~\cite{KSKMBCCE:SIGCHI11}. Another defense is to store cookies on the user's device to prove that the next login attempt comes from a known device. Similarly, one can also utilize features such as IP address, geographical location, device, and time of day~\cite{sandhu2005system,NDSS:FJDBG16} to help distinguish between malicious and benign login attempts. While these features can be helpful indicators, they are not failproof. Honest users oftentimes travel and login from different devices at unusual times. Similarly, an attacker may attempt to mimic the login patterns of legitimate users. The online attacker can also submit guesses from a wide variety of IP addresses and geographical locations, e.g., using a botnet. 
+
+
+
+
+\vspace{-0.1cm}
+
+
+{\noindent \bf {Contributions}} 
+
+
+We introduce $\DALock$, a novel \underline{D}istribution-\underline{A}ware throttling mechanism that can achieve a better balance between usability and security. The key intuition behind $\DALock$ is to base lockout decisions on the {\em popularity} of the passwords that are being guessed. An online attacker will typically want to attempt the most popular passwords to maximize their chances of success. By contrast, when an honest user miss-types (or miss-remembers) their password, the attempt is less likely to be a globally popular password. In addition to keeping track of $\strikeThresholdOfU{u}$ (the number of consecutive incorrect login attempts), $\DALock$ keeps track of a ``hit count'' $\hitCountThresholdOfU{u}$ for each user $u$, where $\hitCountThresholdOfU{u}$ intuitively represents the cumulative probability mass of all incorrect login attempts for user $u$'s account. When $\hitCountThresholdOfU{u}$ exceeds the threshold $\hitCountThreshold$, we decide to lock the account. 
+
+\mypara{Example 1: Usability} \textbf{Figure}~\ref{figure:introduction_security} compares the usability of $\DALock$ with the standard 3-strikes mechanism. In this example scenario, our user John Smith registers an account with the somewhat complicated password ``J.S.UsesStr0ngpwd!'' based on the story ``John Smith uses a strong password.''. Later, when John tries to login into his account, John remembers the basic story, but not the exact password. Did he use his first name and his last name? With or without abbreviation? Did he add a punctuation mark at the end? Which letters are capitalized? If we use the 3-strikes mechanism, John Smith will be locked out quickly, e.g., after trying the incorrect password guesses ``JohnUseStrongPassword,'' ``JohnUsesStrongPassword,'' and ``JohnUsesStrongpwd.'' However, since none of these passwords is overly popular $\DALock$ would allow our user to continue attempting to login until he recovers the correct password. 
+
+
+
+\mypara{Example 2: Security} \textbf{Figure}~\ref{figure:introduction_security} compares $\DALock$ with the 10-strikes mechanism. In this scenario, our user registers an account with a weak password ``letmein.'' Because the password is globally popular, it is likely that an online attacker will attempt this password within the first $10$ guesses and break into the account. By contrast, $\DALock$ will quickly lock down the account after the attacker submits two globally popular passwords. 
+
+
+To deploy $\DALock$, we need a \textit{frequency oracle} to estimate the frequency of each incorrect login attempt to update $\hitCountThresholdOfU{u}$. We propose two implementations: password strength models (e.g., $\ZXCVBN$~\cite{USENIX:Wheeler16}) and a differentially private count sketch data structure. Of course, no frequency oracle will perfectly estimate the true strength of a password and the attacker may try to exploit passwords that are over/underestimated by frequency oracle. We introduce the password knapsack problem to model the optimal (untargeted) attack against $\DALock$. Intuitively, the attacker will try to find a subset of passwords to check which maximizes his success rate subject to the constraint that the total estimated hit count does not exceed the threshold $\hitCountThresholdOfU{u}$.  While password knapsack is $\NP$-Hard, we show that a simple heuristic algorithm works well on empirical datasets. 
+
+
+We then evaluate $\DALock$ empirically by simulating an authentication server in the presence of an online password attacker comparing $\DALock$ with the traditional $\strikeThreshold$-strikes mechanism for $\strikeThreshold \in \{3,10\}$. In our simulations, we use the password knapsack problem to model the behavior of the attacker and we model honest user login attempts/mistakes using a simple model based on prior empirical studies of password typos~\cite{CCS:CWPCR17,SP:CAAJR16}. Our experiments show that when the hit count threshold $\hitCountThreshold$ is tuned appropriately, $\DALock$ significantly outperforms $\strikeThreshold$-strikes mechanisms. In particular, when user accounts are under attack, we find that the fraction of accounts that are compromised is significantly lower for $\DALock$ than classic $\strikeThreshold$-strikes mechanisms --- even for the strict $\strikeThreshold$=3 strikes policy. We also evaluate the unwanted lockout rate of user accounts that are not under attack. We find that the unwanted lockout rate for $\DALock$ is much lower compared to $\strikeThreshold$=3 strikes mechanism. The unwanted lockout rate for $\DALock$ and the more lenient $\strikeThreshold$=10 strikes mechanism were comparable. We also evaluate the performance of $\DALock$ when the organization bans the top $B$ most popular passwords to encourage users to select stronger passwords. We find that $\DALock$ continues to outperform the traditional $\strikeThreshold$=3 strikes mechanism in terms of both usability and security. A more detailed description of our experiments can be found in \textbf{section}~\ref{section:experimentalresult}.
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[height=1in,width=0.48\linewidth]{Figures/Introduction/Usability.pdf}\includegraphics[height=1in,width=0.48\linewidth]{Figures/Introduction/Security.pdf}		\caption{Security(L) \& Usabilty(R) Comparison}\label{figure:introduction_security}
+	\end{center}
+	\vspace{-0.8cm}
+\end{figure}
+

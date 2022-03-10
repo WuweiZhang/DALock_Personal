@@ -1,0 +1,55 @@
+% !TEX root = main.tex
+\subsection{Modeling the Attacker}\label{section:ExperimentDesign-subsection:SimulateAttacker} % Done
+The final component of our simulation is a model of the attacker. We take a conservative approach and model an untargetted attacker with complete knowledge of the password distribution. Following Kerckhoff's principle we also assume that the attacker has access to the complete description of the $\DALock$ mechanism. In particular, for any password $pw$ we assume that the attacker knows both the true probability $ \TrueP{pw}$ and the estimated probability $\EstP{pw}$.  Finally, we also assume that the attacker is given the complete sequence of login times $t_1^u \leq t_2^u \leq  \ldots \leq 24 \times 180$ for each user $u$ over a 180 day time span as well as the outcome of each login attempt e.g., at time $t_i^u$ user $u$ will succeed after 2 incorrect guesses. 
+
+{\bf Remark:} We conservatively aim to overestimate the capabilities of an untargetted online attacker. In practice, the online attacker will be able to able to approximate $ \TrueP{pw}$  and $\EstP{pw}$ overtime by interacting with the $\DALock$ server e.g., by setting up dummy accounts to test many times he can submit a particular incorrect guess without exceeding the hit count. Similarly, the attacker would not necessarily know the exact login times for a user, but this conservative assumption makes it feasible to precisely characterize the optimal behavior of an attacker. In practice, an online attacker might wait several days in between guesses to avoid accidently locking the user's account based on the number of consecutive incorrect login attempts. 
+
+\subsubsection{Optimizing Attack Strategies} %Done
+The goal of the attacker is to maximize the probability of cracking each password within the fixed 180-day time span. For example, the attacker might try to find popular passwords $pw$ where the ratio $\EstP{pw}/\TrueP{pw}$ is small so that the increased hit count is smaller than intended. We formalize the attacker's optimal strategy in terms of the \textsf{Password Knapsack} problem $(\PK)$. Unsurprisingly, the password knapsack problem turns out to be $\NP$-hard (as we prove in the appendix), but there are several heuristic algorithms the $\Adversary$ can use which yield nearly optimal strategies in practice. 
+
+Recall that we assume that the $\Adversary$ has perfect knowledge of the distribution and probability estimates for each password $pw$. We also assume $\Adversary$ knows the $\DALock$ security parameters $\strikeThreshold$ and $\hitCountThreshold$. Furthermore, for each user $u$ we assume that the attacker is given the complete sequence of login times $t_1^u \leq t_2^u \leq  \ldots \leq 24 \times 180$ for each user $u$ over a 180 day time span as well as the outcome of each login attempt e.g., at time $t_i^u$ user $u$ will succeed after 2 incorrect guesses. In particular, at any point in time $t < 24\times 180$ the attacker can infer the current strike threshold and hit count threshold for any user $u$. We denote by $\strikeThresholdOfU{u,t}$ (resp. $\hitCountThresholdOfU{u,t}$) the strike (resp. hit count) threshold  for user $u$ at time $t$ assuming that the attacker does not submit any of his own guesses. 
+
+Supposing that the attacker wishes to avoid locking down the user's account before time $t$ the cumulative (estimated) probability of all guesses submitted before that time should be at most $\hitCountThresholdOfU{u,t}':=\hitCountThreshold- \hitCountThresholdOfU{u,t}$. Similarly, we let $M(t)$ denote the maximum number of guesses that the attacker can sneak in over the first $t$ hours without locking down the account i.e., because $\strikeThresholdOfU{u,t'}  \geq \strikeThreshold$ at some time $t' \leq t$. 
+
+Fixing the time parameter $t$ the attacker’s goal is to find a subset $S_t \subseteq \AllPassword$ of $M(t)$ passwords to check such that 
+\begin{equation} \label{eq:attackerConstraint}
+	\vspace{-0.2cm} 
+	\sum_{pw \in S_t} \EstP{pw} \leq \hitCountThresholdOfU{u,t}' \ . \vspace{-0.1cm} 
+\end{equation}
+After checking the passwords in $S_t$ the attacker can still check one more password $pw_{hold} \not\in S_t$ before the account is locked down. Given a set $S_t$ and a holdout password $pw_{hold} \not\in S_t$ the probability that the attacker succeeds is 
+\begin{equation}\vspace{-0.2cm} \label{eq:attackerSuccess} \TrueP{pw_{hold}} + \sum_{pw \in S_t}\TrueP{pw} \ . \vspace{-0.1cm} \end{equation}
+
+Thus, the goal of the attacker is to find a subset $S_t$ of size $|S_t| \leq M(t)$ maximizing his success rate (eq \ref{eq:attackerSuccess}) subject to the constaint in  equation \ref{eq:attackerConstraint}.
+
+\mypara{Password Knapsack Problem}  Given a password dictionary \\$\{pw_1, \ldots, pw_n\}$ we formally define the \textsf{P}assword \textsf{K}napsack($\PK$) problem as the following integer program with indicator variables $s_i \in \{0,1\}$ and $l_i=\{0,1\}$ for each password $pw_i$. The attackers goal is to select a holdout password and a separate subset of $M$ ($=M(t)$) passwords with total `weight' (estimated probability) at most $\hitCountThreshold'$ ($= \hitCountThresholdOfU{u,t}'$) 
+
+$$
+\begin{array}{crl}
+	&\max {\displaystyle{\sum_i {(s_i + l_i) \cdot \TrueP{pw_{i}}}}} \\
+	subject\ to, &\\
+	&\sum_i{s_i \cdot \EstimateP{pw_i}{\sigma}) \le \hitCountThreshold'} \\
+	&\sum_i s_i \le M\\
+	&\sum_i l_i \le 1\\
+	&\forall i~ l_i + s_i \le 1\\
+	where,\\
+	& \forall i, s_i, l_i \in \{0,1\}
+\end{array}
+$$
+Intutively, setting $s_i$ = 1 means $pw_i$ is selected to be placed in the ``password knapsack" $S\subseteq \AllPassword$, i.e. to be used for dictionary attack. Setting $l_i=1$ indicates that password $pw_i$ is used as holdout password. This is equivalent to the following optimization problem. The constraints ensure that $|S| \leq M$ and we pick exactly one holdout password that is not already in $S$. 
+
+\mypara{Solving the \textsf{P}assword \textsf{K}napsack} To maximize the number of cracked passwords an online attacker can compute $M(t)$ and $\hitCountThresholdOfU{u,t}':=\hitCountThreshold- \hitCountThresholdOfU{u,t}$ for each time $t \leq 24 \times 180$ and solve the corresponding \textsf{P}assword \textsf{K}napsack problem. Given optimal solutions $(pw_{hold,t}^*, S_t^*)$ for each time $t$ the attacker will pick the solution that maximizes the number of cracked passwords as in equation \ref{eq:attackerSuccess}. We remark that the calculations above need to be repeated for each different user $u$ since the values $M(t)$ and $\hitCountThresholdOfU{u,t}'$ may vary due to different visitation schedules.
+
+
+
+
+
+
+
+\mypara{Solving Password Knapsack}  Unfortunately, the \textsf{P}assword \textsf{K}napsack problem is $\NP$-hard as we prove in \textbf{Theorem}~\ref{appendix:ProofOfPasswordKnapsack} in the Appendix via a straightforward reduction from Subset Sum. In all of instances we considered we found that the optimal choice for the holdout password was simply $pw_1$ the most likely password in the distribution. Once we fix our holdout password our problem reduces to the two-dimensional knapsack problem. We remark that $\PK$ can be viewed as a two-dimensional knapsack problem. 
+
+Assuming $P\neq NP$ the two-dimensional knapsack problem does not even admit a polynomial time approximation scheme ($\PTAS$) \cite{kulik2010there} in contrast to the regular knapsack problem which has fully polynomial time approximation scheme ($\FPTAS$)). Thus, we consider two heuristic approaches to solve the password knapsack problem:  $\mathsf{D}$antizig's $\mathsf{A}$lgorithm $\mathsf{B}$ased\cite{Dan:OR57} approach (\DAB) and $\mathsf{F}$easible $\mathsf{M}$ost $\mathsf{P}$romising $\mathsf{P}$assword $\mathsf{F}$irst approach(\FMPPF).
+
+$\DAB$ (\textbf{Algorithm}~\ref{algorithm:Dantizig}, Appendix) sorts the remaining passwords $\mathcal{P}_{\tilde{\Pi}} = \{pw_2, \ldots\, pw_n\}$ based on the ratios $\frac{\TrueP{pw_i}}{\EstP{pw_i}}$ and select candidates based on the sorted order until we either select $M$ passwords or until selecting another password would exceed our capacity $\hitCountThreshold'$. $\FMPPF$ (\textbf{Algorithm}~\ref{algorithm:FMPPF}, Appendix) sorts the remaining passwords based on the true probability $\TrueP{pw_i}$  and simply selects password $pw$ in sorted order until we either select $M$ passwords or until selecting another password would exceed our capacity $\hitCountThreshold'$.  We discuss the advantages and disadvantages to both heuristics in the appendix. Intuitively, $\FMPPF$ (resp. $\DAB$) will perform better when $M$ (resp. $\hitCountThreshold'$) is the limiting constraint.
+
+We found that $\FMPPF$ generally performs better than $\DAB$ despite of its simplicity. In addition, our simuation shows that $\FMPPF$'s performance is close to optimal. Practically speaking, one generally expect $\EstP{pw_i} \approx \TrueP{pw_i}$ especially when $pw_i$ is a popular password. In such case, $\DAB$ can hardly gain advantages from underestimation. Furthermore, imagine one bucket passwords by probability ranges, there are plenty of passwords in each bucket. Intuitively, picking passwords ordered by $\TrueP{pw_i}$ should produce an (almost) optimal solution (quickly). Thus, we choose to present the results based on $\FMPPF$ approach.
+

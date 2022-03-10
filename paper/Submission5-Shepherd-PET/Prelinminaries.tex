@@ -1,0 +1,88 @@
+
+
+% !TEX root = main.tex
+
+
+\vspace*{-\baselineskip}
+\section{Preliminaries} \label{section:Prelinmaries}
+\vspace*{-\baselineskip}
+\subsection{{Notation Summary}}
+%\jeremiah{One of the reviewer complaints was that notation is used before being introduced. I think that concern applies to some of the notation below}
+\vspace*{-\baselineskip}
+In this section, we summarize frequently used notations in this paper across all sections in \textbf{Table}~\ref{table: notation}, Appendix.  %We will use $pw_r = \TrueP{pw_r}$ to denote the probability of the $r$th most likely password in the distribution. 
+
+
+We use $\AllUser = \{u_1,\ldots,u_N\}$ to denote a set of $N$ users and $\SampledData{\AllUser} = \{pw_{u_1},\ldots,pw_{u_N}\}$ to denote the corresponding multiset of user passwords {  i.e.,  $pw_u \in \mathcal{P}$ denotes the password selected by user $u \in \AllUser$}. We typically view $\SampledData{\AllUser}$ as $N$ independent samples from an underlying distribution over $\AllPassword$ and use $\TrueP{pw}$ to denote the probability that a user selects the password $pw \in \AllPassword$. It will be convenient to assume that all passwords $ \AllPassword = \{pw_1,pw_2,\ldots \}$ are sorted in descending order of probability, i.e., so that $\TrueP{pw_1} \geq \TrueP{pw_2} \ldots $. {We use} $\TrueF{pw, \SampledData{\AllUser} }= \left| \left\{ i ~:~pw_{u_i} = pw \right\} \right|$ to denote the number of times the password $pw$ was observed in our sample {--- when the dataset is clear from context we will sometime drop $\SampledData{\AllUser}$  and simply write $\TrueF{pw}$.} 
+
+We remark that $\TrueP{pw} = \frac{\mathbb{E}\left[ \TrueFInD{pw}{ \SampledData{\AllUser}}\right]}{N}$ and thus for popular passwords we expect that the estimate $\TrueP{pw} \approx  \frac{\TrueF{pw, \SampledData{\AllUser}}}{N}$ will be accurate {as long as our sample size $N$ is sufficiently large}. However, because the underlying password distribution is unknown and an authentication server cannot store a plaintext encoding of $\SampledData{\AllUser}$ we will often use other techniques to estimate  $\TrueP{pw}$ and/or $\TrueF{pw, \SampledData{\AllUser}}$. In particular, we consider a count sketch data structure $\CountSketch$ trained on $\SampledData{\AllUser}$ (or a small subsample of $\SampledData{\AllUser}$), which allows us to generate an estimate $\EstP{pw}$ for the {true probability $\TrueP{pw}$} of each password {$pw$}. Similarly, we can also use password strength meters to compute {an estimate} $\EstP{pw}$ {for} $\TrueP{pw}$.
+
+
+
+
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\subsection{Count Sketch}\label{section:Prelinmaries-CountSketch} %Done
+\vspace*{-\baselineskip}
+
+The count sketch~\cite{ICALP:ChaCheFar02} is a succinct data structure which allows for one to quickly obtain an approximation of the frequency of any item in a dataset. {Intuitively, the count sketch data structure supports four operations: $\text{Initialize}$, $\text{Add}$, $\text{Estimate}$ and $\text{TotalFreq}$. The operation Add takes as input an item $x$ (password) and updates the internal state $\sigma$ of the count-sketch. Similarly, the Estimate operation takes as input an item $x$ (password) and outputs an estimate of the number of times that this {\em particular item} $x$ has been added to the count sketch and TotalFreq outputs the total number of items added to the count-sketch. In our implementation, the } 
+state $\sigma: \mathsf{R}^{d\times w} \times \mathsf{R}$ of a count sketch ($\CountSketch$) is represented by a two-dimensional $d\times w$ array $\CountSketchArray$ {where d (depth) and w (width) are parameters of the count-sketch which can be tuned to balance accuracy and space usage,} and a total frequency counter $\CountSketchCounter$.  {More formally the API for a count sketch can be defined as follows: }
+
+%The data strucutre additionally uses $d+1$ hash functions ($h_1, \ldots, h_d$, $h_{\pm}$) with the first $d$ functions chosen uniformly at random from a pairwise-independent family:  
+	%\begin{center}
+%		$$h_1, \cdots, h_d : \{pw\} \rightarrow \{1\cdots w\}~ ,~~ \&~~ h_{\pm} : \{pw\} \rightarrow \{1, -1\}$$
+	%\end{center}
+	
+%In this work, we consider the following four classic count sketch APIs: Initialize, Add, Estimate, and TotalFreq. 
+
+\mypara{$\sigma_{0} \leftarrow$ Initialize($d,w$)}: {This function takes as input the count sketch parameters depth/width parameters $d$ and $w$ and outputs an initial state $\sigma_0 = 0^{d\times w}\times 0$, i.e., an all-zero table. Intuitively, we expect that  $\text{TotalFreq}(\sigma_0)=0$ and that $\EstimateF{pw}{\sigma_0}=0$ for each item/password $pw$ since no items have been added yet.  }
+
+
+\mypara{$\sigma_{new} \leftarrow $ Add($pw, \sigma$):} {This function takes as input the current state $\sigma$ and an item/password $pw$ to add and updates the state of the count sketch to $\sigma_{new}$. Intuitively, we expect that  $\text{TotalFreq}(\sigma_{new})=\text{TotalFreq}(\sigma)+1$ and that  $\EstimateF{pw}{\sigma_{new}}=\EstimateF{pw}{\sigma}+1$ i.e., the total count and the count for $pw$ are incremented by $1$. Because the data-structure is succint it is possible that the operation slightly interferes with the estimates for other items/passwords $pw'\neq pw$ besides the one we are adding i.e., we may have $\EstimateF{pw'}{\sigma_{new}} \neq \EstimateF{pw'}{\sigma}$. For our purposes we do not need to describe the precise details of how the state $\sigma$ is updated. However, we remark that in our count median sketch implementation the L1 distance between $\sigma$ and $\sigma_{new}$ is upper bounded by $\| \sigma -\sigma_{new}\|_1 \leq d+1$ --- this observation will be used later to tune noise levels for differential privacy.   Given a multiset $\SampledData{\AllUser} = \{pw_1,\cdots,pwd_N\}$, we use $\sigma_{\SampledData{\AllUser}} =  \text{Add}(\SampledData{\AllUser},\sigma_0) \\= \text{Add}(pw_1, \text{Add}(pw_2,\text{Add}(pw_3,\cdots\text{Add}(pw_N,\sigma_0)))$ to denote the final state of the count sketch after all passwords in the dataset $\SampledData{\AllUser}$ have been added.  } When the context is clear we also omit the subscript $\SampledData{\AllUser}$ and simply use $\sigma$ to denote $\sigma_{\SampledData{\AllUser}}$.
+
+ %  Intuitively, the Add operation returns an updated count sketch state $\sigma_{new}$ in which the frequency count of password $pw$ increases by 1.
+
+
+. \vspace*{-\baselineskip}
+
+\mypara{Estimate($pw,\sigma$)}: { This function takes as input an item/password $pw$ and the current count sketch state $\sigma$ and outputs an estimate for the frequency of $pw$ without updating the count sketch state $\sigma$. Intuitively}, we want the estimator to have the following correctness property: $\EstimateF{pw}{\sigma} \approx \TrueFInD{pw}{\SampledData{\AllUser} }$, where $\TrueFInD{pw}{\SampledData{\AllUser}}$ denotes the actual frequency of $pw$ in $\SampledData{\AllUser}$.
+
+
+\mypara{TotalFreq($\sigma$)}: this operation takes as input the current count sketch state $\sigma$ and outputs the total number of items that have been added to the count sketch {e.g., if $\sigma_0=\text{Initialize}(D,w)$ and $\sigma_{D_u}$ = Add($D_u, \sigma_0$) then TotalFreq($\sigma$) returns $|D_u|$.} {The state $\sigma$ is not updated.}
+
+
+We denote the \emph{estimated popularity} of a password $pw$ by $\sigma$ with $\EstimateP{pw}{\sigma} = \frac{\EstimateF{pw}{\sigma}}{\text{TotalFreq}(\sigma)}$. For the rest of the discussion, we sometimes omit $\sigma$ when there is no ambiguity to simplify the presentation. e.g. $\EstP{pw}$ = $\EstimateP{pw}{\sigma}$. In addition, we allow the above APIs to take a set of passwords as an argument and return the summed results. i.e. $\EstP{S} = \displaystyle{\sum_{pw \in S} \EstP{S}}$. 
+
+ We elect to use the count (median) sketch~\cite{ICALP:ChaCheFar02} data structure in this work as it is invariant to the order in which passwords are added ( e.g., $\text{Add}(\{pw_1,\ldots,pwd_N\},\sigma) = \text{Add}(\{pw_N,\ldots, pw_1\},\sigma)$), and because it can easily be modified to preserve differential privacy. { StopGuessing\cite{EuroSP:THS19}, {as described in section~\ref{related: Throttling},} used an alternative data-structure called a binomial ladder to identify ``heavy hitters'' (popular passwords) though the data-structure does not provide any formal privacy guarantees such as differential privacy. The binomial ladder is not suitable for $\DALock$ for two reasons. First,  $\DALock$ requires a fine-grained estimate of each password's popularity while a binomial ladder was designed to provide a binary classification i.e., either the password is a ``heavy hitter'' or it is not. Second, the binomial ladder is not invariant to the order in which passwords are added e.g., it can overestimate the frequency of recently popular passwords. }
+
+
+
+
+
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+%widely used in the tasks for finding frequent items such as popular passwords~\cite{CCS:NaoPinRon19}, homepage settings~\cite{CCS:ErlPihKor14}. . 
+\subsection{Differential Privacy} \label{section:Prelinmaries-DiffernetialPrivacy}
+\vspace*{-\baselineskip}
+While the succinct count-sketch data structure is a useful tool to approximate the freqeuncy of a particular password in the dataset, its usage raises a natural privacy concern. Could the attacker infer anything about a particular user's password from the count-sketch $\sigma$ if the authentication server was breached? We address these concerns by using a differentially private count sketch. Differential privacy~\cite{ECS:Dwork11} is a compelling mathematical definition of privacy that has begun to see industrial deployment\cite{CCS:ErlPihKor14}. It is often viewed as a gold standard for data privacy.  In this work, we adopt differentially private count sketches to reduce the risk of privacy leakage. {In our password context} we can define differential privacy as follows.
+\vspace*{-\baselineskip}
+\begin{definition}[{$\epsilon$-Differential Privacy~\cite{ECS:Dwork11}}] \label{def:diff}
+
+	A randomized mechanism $\mathcal{M}$ gives $\epsilon$-differential privacy if for any pair of neighboring datasets $\SampledData{\AllUser}$ and $\SampledData{\AllUser}'$, and any $\sigma \in \mathit{Range}(\mathcal{M})$,
+	$$\Pr{\mathcal{M}(\SampledData{\AllUser})=\sigma} \leq e^{\epsilon}\cdot \Pr{\mathcal{M}(\SampledData{\AllUser}')=\sigma}.$$
+\end{definition}
+\vspace*{-\baselineskip}
+
+We consider two datasets $\SampledData{\AllUser}$ and $\SampledData{\AllUser}'$ to be neighbors i.f.f. either $\SampledData{\AllUser}=\SampledData{\AllUser}' + pw_u$ or $\SampledData{\AllUser}'=\SampledData{\AllUser} + pw_u$, where $\SampledData{\AllUser} +pw_u$ denotes the dataset resulted from adding the {password} $pw_u$ to the dataset $\SampledData{\AllUser}$. We use $\SampledData{\AllUser}\simeq \SampledData{\AllUser}'$ to denote two neighboring datasets. {Differential privacy} protects the privacy of any {individual password in the dataset $\SampledData{\AllUser}$} because adding or removing any single password results in $e^{\epsilon}$-multiplicative-bounded changes in the probability distribution of the output. If an adversary can make a certain inference about a password based on the output, then the same inference is also likely to occur even if the password does not appear in the dataset.
+
+\mypara{Laplace Mechanism} The Laplace mechanism is a classic tool to achieve differential privacy {i.e., given any function $f(x) \in \mathbb{R}^{wd+1}$ the mechanism $\mathcal{M}(x) = f(x) + (Z_1,\ldots,Z_{wd+1})$ is $\epsilon$-differentially private where for each $i \leq wd+1$ the random variable $Z_i$ is sampled from the Laplace Distribution with PDF $\frac{\epsilon}{2 \cdot GS_f} \exp\left(  \frac{- \epsilon| Z_i|}{GS_f}\right)$. Here,  $GS_f$ denotes the global sensitivity of the function $f$ and the noise distribution also depends on the privacy parameter $\epsilon$.  In our particular case the global sensitivity of the function $f(\SampledData{\AllUser}) = \text{Add}(\SampledData{\AllUser}, \text{Initialize}(d,w))$ is  $GS_f \leq d+1$ i.e., given any two neighboring datasets $\SampledData{\AllUser}$ and $\SampledData{\AllUser}'$ we have $\|f(\SampledData{\AllUser}) - f(\SampledData{\AllUser}') \|_1 \leq d+1$ . Formally, we use \mypara{$\sigma_{dp}$ $\leftarrow$ DP($\epsilon, \sigma$)} to denote a function which (1) samples laplace noise $(Z_1,\ldots,Z_{wd+1})$ according to the PDF $\frac{\epsilon}{2(d+1)} \exp\left( -\frac{\epsilon | Z_i|}{d+1}\right)$, and (2) outputs $\sigma_{dp}= \sigma + (Z_1,\ldots,Z_{wd+1})$ to obtain a $\epsilon$-differentially private count sketch state $\sigma_{dp}$. The noise can be added during initialization i.e., we can equivalently set $\sigma_0 = (Z_1,\ldots, Z_{dw+1})$ instead of $\sigma_0 = (0,\ldots,0)$  during initialization and then compute the final count-sketch state as $\sigma=\text{Add}(\SampledData{\AllUser}, \sigma_0)$.   }
+
+
+\mypara{Differentially Private Count Sketch: Threat Model} {In our threat model we consider an adversary who obtains a single snapshot of the count-sketch state e.g., $\sigma = \text{Add}(\SampledData{\AllUser}, \text{Initialize}(d,w)) + (Z_1,\ldots, Z_{wd+1})$. Intuitively, differential privacy ensures that the attacker will not be able to use the snapshot $\sigma$ to draw inferences about any individual password $pw_u$. However, we do not provide privacy guarantees against an attacker who can continuously monitor the state of the count sketch as passwords are added over time e.g., if the attacker learns the initial state $\sigma_0 =  (Z_1,\ldots, Z_{wd+1})$ as well as the final state $\sigma = \text{Add}(\SampledData{\AllUser}, \sigma_0)$ then the attacker can easily compute $\sigma-\sigma_0 = \text{Add}(\SampledData{\AllUser},\text{Initialize}(d,w))$ to remove the noise that we added to preserve differential privacy. We could adopt a stronger privacy notion such as pan-privacy \cite{ITCS:DNPRY10} to protect against an attacker who can obtain multiple snapshots of the count sketch state. However, we note that an attacker who is continuously present on the authentication server would (most likely) also be able to observe the plaintext passwords directly. Thus, the practical privacy benefits of using a pan-private count sketch may not be significant.    }
+
+
+\mypara{Differential Privacy in Passwords} Naor et al.\cite{CCS:NaoPinRon19} designed a locally differentially private mechanism to identify the most popular passwords in a distribution. Blocki et al.~\cite{NDSS:BloDatBon16} developed a differentially private mechanism for integer partitions and used this to release a private summary of the Yahoo! password dataset. 
+
+
+
+%========= Above In Appendix ===========
+

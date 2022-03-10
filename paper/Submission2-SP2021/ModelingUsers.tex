@@ -1,0 +1,76 @@
+% Comment Unwanted text for later S&p Submission
+
+% !TEX root = main.tex
+
+\subsection{Modeling Users} \label{section:ExperimentDesign-subsection:SimulateUser}
+
+Our model to simulate honest users' behavior consists of three key components: user password selection, login frequency, and mistake model. 
+
+
+
+
+
+\subsubsection{Simulating Users’ Password Choices:}\label{section:ExperimentDesign-subsection:SimulateUser-subsubsection:SimulatePasswordChoice}
+
+In each simulation, we fix a dataset that is used to simulate user password selection. In particular, a dataset consists of a multiset $\SampledData{\AllUser} = \{pw_1,\cdots,pw_N\}$ of $N$ passwords which can be compressed into pairs $(pw,  \TrueFInD{pw}{\SampledData{\AllUser} })$ where $\TrueFInD{pw}{\SampledData{\AllUser} }$ denotes the number of times the password $pw$ occurs in the dataset $\SampledData{\AllUser}$. Each dataset $\SampledData{\AllUser} $ induces an empirical distribution over users’ passwords where the probability of sampling each password $pw$ is simply $\frac{\TrueFInD{pw}{\SampledData{\AllUser}}}{N}$. Each simulated user $u$ in our experiment has 6 different passwords sampled from this empirical distribution and registers with the first sampled password. The remaining five extra sampled passwords will be used to help to simulate recall errors (see \lazyref{Section}{section:ExperimentDesign-subsection:SimulateUser-subsubsection:SimulateUserMistake}), e.g., they represent the user's passwords for other websites. 
+
+
+
+%Move to appendix We remark that the Yahoo! dataset~\cite{SP:Bonneau12,NDSS:BloDatBon16} only contains frequencies without actual passwords i.e., instead of recording the pair $(pw,  \TrueFInD{pw}{\SampledData{\AllUser} })$ the dataset simply records $\TrueFInD{pw}{\SampledData{\AllUser} }$ . We generate a complete password dataset by designating a unique string for each password. As we avoid using password models like $\ZX$ to analyze $\DALock$ with the Yahoo! dataset since frequency estimation requires access to the original passwords. However, we are still able to evaluate $\DALock$ with the Yahoo! dataset using the Count-Sketch frequency oracle. 
+
+
+\mypara{Ban-list} We additionally consider the setting where the authentication server chooses to ban users from selecting the top $B$ passwords, e.g., top 10 passwords. We use the normalized probabilities model~\cite{BKPS:ACMEC13} to simulate users' password selections under this restriction. In this model, we simply use rejection sampling to avoid sampling one of the top $B$ passwords. Equivalently, we can let $\SampledData{\AllUser, B}$ denote the dataset $\SampledData{\AllUser}$ with the $B$ most common passwords removed and sample from the empirical distribution corresponding to the updated dataset $\SampledData{\AllUser, B}$.
+
+
+
+
+
+
+
+%Move to appendix \wuwei{This paragraph needs polishing}
+
+%\mypara{Simulating Password Choices on Yahoo!} Simulating user's choice of password on Yahoo dataset involves an extra step: generate plaintext password string because it only contains the statistics of passwords. Notice that based on \textbf{Table}~\ref{table: datasetsummary},
+
+%Yahoo contains more unique passwords than the rest two; therefore, it is impossible to map the dataset fully. To conquer this issue, we map password strings from RockYou to Yahoo as follows. Firstly, we sample users' choice of passwords from Yahoo based on its current distribution. Secondly, we map the top 20,000 passwords from RockYou to the top 20,000 passwords of Yahoo. For example, $pw_1$ and $pw_2$ from Yahoo are represented by ``123456" and ``12345" respectively, the top 2 passwords from RockYou. The goal of this step is to ensure an adequate string representation of popular passwords. Literatures\cite{EPRINT:WJHW14,TIFS17:WCWPXG,ESORICS:WanWan16,SP:BloHarZho18} suggests that Yahoo and RockYou both follow Zipf's law. Thus there are huge gaps among the top ranks. Thirdly, we map the rest of (RockYou) passwords to Yahoo according to their rankings and the users' choice.  For selected passwords, we map them from passwords with similar ranks in RockYou. On the other hand, we map the unselected passwords uniformly, roughly every 4, from RockYou. 
+
+
+
+\subsubsection{Simulating User's Login Patterns}\label{section:ExperimentDesign-subsection:SimulateUser-subsubsection:SimulateLoginPattern} %Done
+
+To simulate users, we need to model the frequency with which our honest user attempts to login to the authentication server. In particular, we aim to simulate the login behaviors over a 180-day time span. For each user $u$, we want to generate a time sequence $0 < t_1^u < t_2^u < \cdots < 4320 = 180\times24$ where each $t_i^u \in \mathbb{N}$ represents the time (in hours) of the $i$th user visit. Following prior works (e.g., see \cite{AC:BloBluDat13,CCS:KogManBon17}), we use a Poisson arrival process to generate the sequence. The Poisson arrival process is parameterized by an arrival rate $T_u$ (hours), which encodes the expected time between consecutive login attempts $T_u = \mathbb{E}[t_{i+1}-t_i]$. The arrival process is memoryless, so the actual gap $t_{i+1}-t_i$  is independent of $t_i$. Since some users are more active than others, we pick a different arrival rate $T_u$ for each user $u$ where each $T_u$ is sampled uniformly at random from $\{ 12, 24, 24 \times 3, 24 \times 7, 24 \times 14, 24 \times 30\}$. The parameter $T_u = 12$ (hours) corresponds to users who login to their accounts twice per day on average, while the parameter $T_u = 24 \times 30$ corresponds to a user who visits the site once per month. We assume that users continue attempting to login for each user visit until they succeed or get locked out. 
+
+
+
+
+
+
+To independently study the throttling effects of $\DALock$, we do not simulate users who completely forget their passwords as these users will need to reset their passwords independently of the deployed throttling mechanism. In addition, we do not simulate a client device that automatically attempts to login on the user's behalf. It may be desirable to have the authentication server stores the (salted) hash of the user’s previous password(s) to avoid locking the user's account in settings where a client device might repeatedly attempt to login with an outdated password. Alternatively, the authentication server could store an encrypted cache of failed login attempts using public-key cryptography. Each failed login attempt $pw_u' \neq pw_u$ would be encrypted with a public key $pk_u$ and stored on the authentication server. The encrypted cache could only be decrypted when the user authenticates with the correct password\footnote{Unlike the public encryption key $pk_u$, which would be stored on the authentication server, the secret key $sk_u$ would only be stored in encrypted form i.e., the server would store $c_u = \mathbf{Enc}_{K_u}(sk_u)$ where $K_u = \mathbf{KDF}(pw_u)$ is a symmetric encryption key derived from the user's password. }. The encrypted cache could be used as part of a personalized typo corrector~\cite{CCS:CWPCR17} and could also be used to avoid penalizing repeat mistakes~\cite{CCS:CWPCR17,EuroSP:THS19}. One potential downside to this approach is that the cache might inadvertently contain credentials from other user accounts, making cached data valuable to the attacker. More empirical studies would be needed to determine the risks and benefits of maintaining such a cache.
+
+
+
+\subsubsection{Simulating Users' Mistakes}\label{section:ExperimentDesign-subsection:SimulateUser-subsubsection:SimulateUserMistake} %Done
+
+The last component of our user model is a mechanism to simulate users’ honest mistakes during the authentication process. Our model relies upon recent empirical studies of password typos~\cite{CCS:CWPCR17,SP:CAAJR16} and additionally incorporates other common user mistakes, e.g., recall errors. The aforementioned studies show that roughly $7.5\%$ of login attempts are mistakes, and at least $68\%$ of them are (most likely) typos, i.e., within editing distance $2$ of the original passwords.  
+
+
+
+Accordingly, we set the mistake rate to be $7.5\%$ for simulation. When simulating each login attempt, the user will enter the correct password with probability $92.5\%$. Otherwise, the user will enter an incorrect password with probability $7.5\%$ and the next step is to simulate the error(s). Based on the statistics mentioned earlier, we simulate typos and recall errors with probability $68\%$ and $32\%$, respectively. To simulate a recall error, we randomly select one of the user's five alternate passwords to model a user who forgot which of their passwords was associated with this particular account. If the user recalls the wrong password, they might additionally miss-type it (with probability $0.075\cdot 0.68$).  We refer an interested reader to \lazyref{Appendix}{appendix:simulateMistakes} for a more detailed discussion of our mistake model, including a flow chart (see Figure~\ref{figure:flowChartTypo}) and more fine-grained typo statistics (see  Table~\ref{Table:TypoTypes}).
+
+
+
+%Wuwei: Below is mentioned previously.
+
+
+%We remark that we do not attempt to simulate a user who completely forgets his password. Of course, we expect that this will occasionally happen in reality. However, we observe that a user who forgets his password will {\em always} need to reset it regardless of the throttling mechanism adopted by the authentication server.
+
+
+
+
+
+
+
+
+
+
+
+

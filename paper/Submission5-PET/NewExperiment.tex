@@ -1,0 +1,28 @@
+
+\subsection{Results on Subsampling}
+We found that it is possible to deploy $\DALock$ without full dataset set based on our subsampling experiments. We remind readers that in such experiment, we implement $\DALock$ with Count Sketch $\sigma_{r\%}$ which is constructed based on sampling r\% of the users from true distriubiton. The results suggest that $\sigma_{r\%}$ can be as effective as $\sigma$ which indicates service providers do not need to collect an enourmous amount of data to implement $\DALock$.
+
+One can observe such effects by comparing curves $\sigma_{1\% dp}$: CS-1\%(k:10,$\Psi:2^{-9.375},\epsilon$:0.1), $\sigma_{5\%}$: CS-5\%(k:10,$\Psi:2^{-9.375},\epsilon$:$\infty$) and $\sigma_{10\%}$: CS-10\%(k:10,$\Psi:2^{-9.375},\epsilon$:$\infty$) with $\sigma$: CS-all(k:10,$\Psi:2^{-9.375}$,$\epsilon:\infty$) from \textbf{Figure}~\ref{figure:dictionaryAttack9.375} and \ref{figure:usability9.375}. (Similarly for $\Psi = 2^{-7.0}$ from \textbf{Figure}~\ref{figure:dictionaryAttack7.0} and ~\ref{figure:usability7.0}.). Our results clearly demonstrates that of $\sigma_{1\%}$, $\sigma_{5\%}$, and $\sigma_{10\%}$ all have comparable performance with respect to $\sigma$ in both security and usability. 
+
+\subsection{Results on Differentially Private Count Sketch}
+Consider $\sigma_{1\%dp}$ mentioned in the previous section is a differentially private Count Sketch as well. Notice that for popular password pw, $\TrueFInD{pw}{\SampledData{\AllUser_{1\%}}}$ are roughly 100 times smaller compare to $\TrueFInD{pw}{\SampledData{U}}$ because of subsampling. Similarly, $\TotalFreq{\SampledData{U}} \approx 100\times \TotalFreq{\SampledData{\AllUser_{1\%}}}$. As a result, applying differential privacy to $\sigma_{1\%}$ produce more noisy results. Our experimental results on $\sigma_{1\%dp}$ show that it's performance is close to $\sigma$ in terms of both usability and security. This results suggest that with a reasonably large dataset, it's possible to deploy differentially private $\DALock$ with low privacy budget.
+
+\subsection{Results on Other Estimators}
+In this section we demonstrate our findings on implementing $\DALock$ with other estimators. We considered the following password strength meters: $\ZXCVBN$\cite{USENIX:Wheeler16}, Probablistic Context Free Grammar(PCFG), Neural Network, and Hashcat. The later four estimators are provided by Password Guessing Service\cite{USENIX:USBCCKKMMS15}. Since PGS also highly recommends use a hybird approach which takes the min guessing number of the later four apporaches to estimate the strength of passwords, we also include such methodology in our experiments. 
+
+\noindent\textbf{Remark}: We omit the experiment results on Yahoo! for this part as password strength meters estimate the strength of passwords based on their string content. 
+
+We discovered that it is feasible to deploy $\DALock$ with the above estimators; however, deploying them with an inapporiate $\hitCountThreshold$ can yields less demanding results. The experiments results can be found in \textbf{Figure}~\ref{figure:dictionaryAttack9.375}, \ref{figure:usability9.375}, ~\ref{figure:dictionaryAttack7.0}, and ~\ref{figure:usability7.0}. Based on the plots, we found PCFG and $\ZXCVBN$ have satisfying performance by setting $\hitCountThreshold = 2^{-9.375}$. Similarly Min, Markov, and Hashcat outperform 3-strike mechanism on both security and usability when $\hitCountThreshold$ is set to $2^{-7}$. We also found it's not possible to implement the estimator with Neural Netowrk (provided by PGS) alone as it regards most passwords as infrequent ones. 
+
+\subsection{Results on Banning Popular Passwords}
+We elaborate our findings on implement $\DALock$ with $\sigma_{-10000}$. Recall that $\sigma_{-10000}$ is constructed from the original dataset by banning top 10,000 passwords. In this scenario, the true distribution is flatend because of banning thus small $\hitCountThreshold$ is required to perform throttling. Our experimental results on $\hitCountThreshold$ = $2^{-11}$ can be found in \textbf{Figure}~\ref{figure:dictionaryAttackPrune} and ~\ref{figure:usabilityPrune}. 
+
+Firstly, we found that dictionary attackers are strongly discouraged simply because of the distribution. By comparing \textbf{Figure}~\ref{figure:dictionaryAttackPrune} and \textbf{Figure}~\ref{figure:dictionaryAttack7.0}, one can observe that the compromised rates are significantly reduced. For example, the attacker can only compromise 1\% of users accounts on $\text{LinkedIn}_{-10000}$ while they can acheive 12\% on the original dataset. 
+
+Secondly, we discoverd that Count-Sketch based $\DALock$ can be deployed on a flat distribution. By comparing curves $CS-all(K:10,\Psi: 2^{-11.0}, \epsilon)$ and 3-strike from \textbf{Figure}~\ref{figure:dictionaryAttackPrune}  and ~\ref{figure:usabilityPrune}. Despite the advantage on security side is minor, Count Sketch based $\DALock$ results in lower unwanted locked out rate. 
+
+Thirdly, we do acknowledge that it is a challenging task to implement estimator with password strength meter under a flat distribution. Based on results, it's impossible to find a $\hitCountThreshold$ value such that one can beats 3-strike for both security and usability. 
+
+
+
+

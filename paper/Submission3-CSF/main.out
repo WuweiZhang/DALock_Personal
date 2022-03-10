@@ -1,0 +1,36 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Contributions}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Related Work and Background}{}% 3
+\BOOKMARK [2][-]{subsection.2.1}{Authentication Throttling}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.2}{Passwords}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.3}{Eliminating Dictionary Attacks}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Preliminaries}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Count Sketch}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Differential Privacy}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.3}{Notation Summary}{section.3}% 10
+\BOOKMARK [1][-]{section.4}{The DALock Mechanism}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{DALock}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{DALock Authentication Server}{section.4}% 13
+\BOOKMARK [1][-]{section.5}{Experimental Design}{}% 14
+\BOOKMARK [2][-]{subsection.5.1}{Experimental Datasets}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.2}{Modeling Users}{section.5}% 16
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Simulating Users\220 Password Choices}{subsection.5.2}% 17
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Simulating User's Login Patterns}{subsection.5.2}% 18
+\BOOKMARK [3][-]{subsubsection.5.2.3}{Simulating Users' Mistakes}{subsection.5.2}% 19
+\BOOKMARK [2][-]{subsection.5.3}{Modeling the Authentication Server}{section.5}% 20
+\BOOKMARK [3][-]{subsubsection.5.3.1}{Differentially Private Count Sketch Estimator}{subsection.5.3}% 21
+\BOOKMARK [3][-]{subsubsection.5.3.2}{Frequency Oracle from Password Models}{subsection.5.3}% 22
+\BOOKMARK [2][-]{subsection.5.4}{Modeling the Attacker}{section.5}% 23
+\BOOKMARK [3][-]{subsubsection.5.4.1}{Optimizing Attack Strategies}{subsection.5.4}% 24
+\BOOKMARK [1][-]{section.6}{Experimental Results}{}% 25
+\BOOKMARK [2][-]{subsection.6.1}{Usability/Security Tradeoff}{section.6}% 26
+\BOOKMARK [2][-]{subsection.6.2}{Impact of Banlist Size on Security/Usability}{section.6}% 27
+\BOOKMARK [2][-]{subsection.6.3}{Summary and Discussion}{section.6}% 28
+\BOOKMARK [1][-]{section.7}{Conclusion}{}% 29
+\BOOKMARK [1][-]{section*.7}{References}{}% 30
+\BOOKMARK [1][-]{section*.8}{Appendix}{}% 31
+\BOOKMARK [2][-]{subsection.Appendix.A.1}{DALock Authentication Algorithm}{section*.8}% 32
+\BOOKMARK [2][-]{subsection.Appendix.A.2}{Password Knapsack is NP hard}{section*.8}% 33
+\BOOKMARK [2][-]{subsection.Appendix.A.3}{Solving PK with Heuristic}{section*.8}% 34
+\BOOKMARK [2][-]{subsection.Appendix.A.4}{Details on Simulating Users' Mistakes}{section*.8}% 35
+\BOOKMARK [2][-]{subsection.Appendix.A.5}{More Experimental Results}{section*.8}% 36

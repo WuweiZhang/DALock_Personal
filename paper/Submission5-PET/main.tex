@@ -1,0 +1,71 @@
+\documentclass[USenglish,oneside,twocolumn]{article}
+
+\usepackage[utf8]{inputenc}%(only for the pdftex engine)
+%\RequirePackage[no-math]{fontspec}%(only for the luatex or the xetex engine)
+\usepackage[big]{dgruyter_NEW}
+ \input{premierPackage}
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{changes}
+
+
+%\DOI{foobar}
+
+\cclogo{\includegraphics{by-nc-nd.pdf}}
+  
+\begin{document}
+ 
+
+  \author*[1]{Anonymous Submission}
+
+%  \author[2]{Second Author}
+
+  %\author[3]{Third Author}
+
+  %\author[4]{Fourth Author}
+
+ % \affil[1]{Affil, E-mail: email@email.edu}
+
+%  \affil[2]{Affil, E-mail: email@email.edu}
+
+
+\title{$\DALock$: Password \underline{D}istribution-\underline{A}ware Throttling}
+
+  \runningtitle{Article title}
+
+  %\subtitle{...}
+
+\begin{abstract}
+{\input{abstract}}
+\end{abstract}
+\keywords{Authentication Throttling; Password; Dictionary Attack}
+%  \classification[PACS]{}
+ % \communicated{...}
+ % \dedication{...}
+
+%  \journalname{Proceedings on Privacy Enhancing Technologies}
+%\DOI{Editor to enter DOI}
+%  \startpage{1}
+  %\received{..}
+  %\revised{..}
+  %\accepted{..}
+
+  \journalyear{..}
+  \journalvolume{..}
+  \journalissue{..}
+ 
+
+\maketitle
+\raggedbottom
+\vspace{-1.5cm}
+\input{ccs-body} 
+\clearpage
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{../cryptobib/abbrev0,../cryptobib/crypto,../otherReference/CCSStyle}
+\input{Appendix}
+
+\end{document}
+
+
+
+\end{document}

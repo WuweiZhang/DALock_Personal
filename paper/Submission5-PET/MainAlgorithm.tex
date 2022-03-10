@@ -1,0 +1,206 @@
+\section{The DALock Mechanism}
+In this section, we present the DALock mechanism, discuss how DALock might be implemented and the strategies that an attacker might use when DALock is deployed.
+
+\subsection{DALock}
+We formally introduce our main algorithm, DALock, in this section. We start by defining and describing the general framework of DALock. Following by proving why it is secure and user-friendly.
+
+We first formally define classic throttling mechanism. Traditional Throttling mechanism maintains a counter k for each user u. Counter k stores consecutive incorrect login attempts in history. Typically, k is reset to 0 whenever u logins successfully. Some systems also reset k to 0 after a certain amount of time or maintain separate counters for different IP addresses. Mathematically speaking, one can define classic throttling mechanism as follows
+
+\begin{definition}[($K$-Secure Throttling Mechanism]
+Given integer K $\ge $ 1, $K$-Secure Throttling Mechanism $\mathcal{M}$ prevents login if $k \ge K$.
+\end{definition}
+
+DALock\ maintains extra ``hit count" $\psi$ corresponding to the total population density of attempted passwords. For example, if three incorrect passwords ``aaa"(3\%), ``bbb"(1.7\%), and ``lccc"(0.8\%) are attempted, then $\psi$ is set to 0.055.
+
+\begin{definition}[($(\Psi, K)$-Secure Throttling Mechanism]
+Given $\Psi > 0$ and  integer $k$ $\ge $ 1, $(\Psi, K)$-secure throttling mechanism $\mathcal{M}$ prevents login if
+\begin{center}$k \ge K$ or $\psi \ge \Psi$\end{center} 
+\end{definition}
+
+We demonstrate the login flow in \textbf{Algorithm}~\ref{algo: login}. The pseudo code is self-explanatory, therefore we omit the detail description of it.
+
+\begin{algorithm}[!htb]
+	\caption{\textbf{DALock}: Novel Password Distribution Aware Throttling Mechanism }\label{algo: login}
+	\textbf{Input: } Username $u$ and password $p$
+	\begin{algorithmic}[1]
+		\Function{login}{$u, p$} 
+		\If {$\psi \ge \Psi$ or k $\ge$ K }
+			\State Reject Login
+		\EndIf
+		\If{$p == u_p$}
+			\State Reset k and $\psi$
+			\State Grant Access
+		\Else
+			\State $\psi \leftarrow \psi + popularity(p)$
+			\State $k \leftarrow k + 1$
+			\State Deny Access
+		\EndIf
+		
+	    \EndFunction
+	\end{algorithmic}
+\end{algorithm} 
+
+\subsection{Implementing DALock}
+
+To efficiently run DALock, one needs an efficient data structure to accurately, privately, and securely estimate the population density of passwords. We adopt Differential Private Count-Median-Sketch to store password distribution as it meets all the expectations. Due to space limitation, we omit the description of applying differential privacy to focus on discussion Count Sketch.
+
+\begin{definition}[Count Sketch\cite{cormode2005improved}~\cite{charikar2002finding}]A Count sketch with volume V = w$\cdot d$ is represented by a two-dimensional array with width w and depth d. Additionally, it contains d + 1 hash functions
+\begin{center}
+$h_1 \cdots h_d$ : $\{\sigma^*\} \rightarrow \{1\cdots w\}$\\
+$h_{\pm} : \{\sigma^*\} \rightarrow \{1, -1\}$\\
+\end{center}
+are chosen uniformly at random from a pairwise-independent family. Finally an integer T is maintained to record the total frequency.
+\end{definition}
+A typical Count Sketch involves the following operations:
+\mypara{Add($p$):} Given input password word $p$ = $\sigma^*$, CS updates the table as follows: 
+\begin{center}$\forall i \in d$, $CS[i,h_i(p)] \leftarrow CS[i,h_i(p)] + h_{\pm}(p)  $ \\ $T \leftarrow T + 1$  
+\end{center}
+\mypara{Estimate($p$):} Given input password word $p$ = $\sigma^*$, CS estimates its popularity based on predefined mechanism. 
+
+In this work, we consider three popular estimation functions: Median, Mean, and Min. Median approach estimate the frequency of $p$ by $Median_{\forall i \in d}$( $CS[i,h_i(p)]\cdot h_{\pm}(p))$. Similarly, the other two approach use the mean and min of d values as estimation. 
+
+ We discovered that Count-Median-Sketch outperforms Count-Mean-Sketch and Count-Min-Sketch for storing password distribution. In addition, we discovered that setting $d$ to 1 yields the lowest $l_1$ error for all CS. Subject to the space limitation, we only present the high level proof for Count-Median Sketch. 
+
+\begin{theorem}[Optimal Parameter Choice of Count Sketch]
+Given volume size V =  $d \cdot w$, the optimal choice of Count Sketch, Count Mean Sketch, and Count Min Sketch is to set $d$ = 1 when passwords follow Zipf's Distribution.
+\end{theorem}
+\mypara{Intuitive Proof:} 
+Due to the nature of Zipf's distribution, the frequency count of any index CS[i,j] of a count median sketch is dominated by the most popular password hashed into that index. With larger d, an infrequent password p is more likely to collide with significantly more popular passwords on every row. Taking the median of d rows is essentially taking the median of d different popular passwords. Therefore, infrequent passwords are overwhelmingly overestimated with large d. 
+
+\subsection{Attacker's Strategies}
+In order to launch optimal dictionary attacks, $\mathcal{A}$ needs to find a subset of passwords that maximize its chance of success \textbf{without} triggering DALock. We proved this is computational challenging. In fact, it is $\NP$ hard to find the optimal guessing arrangement.
+
+\mypara{Hardness of Password Cracking}
+Perform optimal dictionary attacks on$(\Psi, K)$-Secure throttling mechanism is $\NP$ hard.
+
+To maximized its chance of success, $\mathcal{A}$ has to select at most $K-1$ passwords from the dictionary s.t. the sum of popularity is maximized \textbf{and} not exceeding $\Psi$. This can be reduced to solving a well-known $\NP$ hard problem: Knapsacks. 
+
+Admittedly, $\mathcal{A}$ can solve Knapsacks efficiently with close approximation because Knapsacks $\in \FPTAS$. Fortunately, users' unpredictable mistakes make the attack harder. $\mathcal{A}$ is forced to make a decision about how much  ``mistake budget"$\psi'$ to be reserved for users' potential mistakes.
+
+Creating false popular passwords is another way to exploit DALock. In this circumstance, $\mathcal{A}$ needs to sign up sufficiently many accounts with infrequent passwords to decrease the popularity of true ones. Despite the fact that it can circumvent the restriction imposed by $\Psi$, $\mathcal{A}$ is still subject to counter $K$. Therefore $\mathcal{A}$ does not gain any advantage by disturbing distribution. 
+
+%-----------BELOW NOT IN WAY--------------%
+\begin{comment}
+{\color{red} once again the statement is too informal to be place in a "lemma" environment. I would simply have informal discussion here.}
+\begin{lemma}[Lower Economic Value of Password Cracking ]
+Password Cracking under $(\Psi, K)$-Secure throttling mechanism yields lower economic value compare to $K$-Secure throttling mechanism.
+\end{lemma}
+
+
+\mypara{Intuitive Proof:} We prove that in both long term and short term attacks, $(\Psi, K$-Throttling mechanism decrease the profit of $\mathcal{A}$ by significantly delaying the guessing progress. 
+
+We define one ``round" of attack as password guessing between a user's two successful login. Since successful logins reset cumulative thresholds $\psi$ and $k$, and users are likely to login regularly for online services. $\mathcal{A}$ can launch long-term online attacks to achieve higher economic gains. $\Psi$ naturally serves as an (overestimated) upper-bound on the potential economic gain for each round. We argue that there are two factors make the guessing a lot harder than $K$-Secure throttling mechanism.
+\end{comment}
+ 
+
+\begin{comment}
+\mypara{Deferred High Quality Guess.} Let $\mathcal{A}$ be powerful that $\mathcal{A}$ can not only solve the t-round knapsack problem efficiently. In addition, assume $\mathcal{A}$ magically foresees future ``login patterns" of all users. $\mathcal{A}$'s maximum economic gain is still capped at $\Psi$. If most worth-to-try passwords have higher popularity density than $\frac{\Psi}{K}$, then $\mathcal{A}$ is significantly slowed down as $\mathcal{A}$ can't make k guess each round compare to $K$-Secure throttling mechanism. 
+ \qed
+
+\mypara{Users' Utility} Based on our empirical measurements, we discovered that $(K, \Psi)$-Secure throttling mechanism grants higher utility for users. Typos are generally very rare passwords. As a result, users can fully utilize $K$ attempts. We empirically demonstrates the result in \textbf{Section}~\ref{sec:oneroundexp}.
+\end{comment}
+%-----------ABOVE NOT IN WAY--------------%
+
+
+
+
+
+\begin{comment}
+\section{Results}\label{sec:main}
+In this section, we present DALock mechanism and other results. Due to the space limitation, we present ``intuitive proof" of theorems instead of complete proof. In addition, we omit the discussion of how to compute and store frequencies of passwords privately. But keep in mind differential privacy\cite{dwork2011differential}, a mathematical rigorous and industry golden standard tool, has been used in our work.
+\subsection{Optimal Size Choice of Count Sketch under Zipf's Distribution}
+A Count sketch\cite{cormode2005improved}~\cite{charikar2002finding} with volume V = w$\cdot d$ is represented by a two-dimensional array with width w and depth d. Additionally, it contains d + 1 hash functions
+\begin{center}
+$h_1 \cdots h_d$ : $\{\sigma^*\} \rightarrow \{1\cdots w\}$\\
+$h_{\pm} : \{\sigma^*\} \rightarrow \{1, -1\}$\\
+\end{center}
+are chosen uniformly at random from a pairwise-independent family. Finally an integer T is maintained to record the total frequency.
+
+
+
+We omit the discussion of Count-Mean-Sketch and Count-Min-Sketch due to space limitation and similarity to Count-Median-Sketch.
+
+\begin{theorem}[Optimal Size Choice of Count Sketch]
+Given volume size V =  $d \cdot w$, the optimal choice of Count Sketch, Count Mean Sketch, and Count Min Sketch is to set $d$ = 1 when the dataset follows Zipf's Distribution.
+\end{theorem}
+
+\mypara{Intuitive Proof:} We present the high level idea of the proof for Count-Median Sketch only due to space limitation and similarity in proof for the rest two data structures.
+\begin{comment}
+Given total volume size V and a dataset $\mathcal{P}$ that follows Zipf's distribution. What's the optimal setting of $d$ and $w$ for CS i.e. one needs to solve the following integer programming problem
+\begin{center}
+	minimize $\displaystyle{\sum_{\forall p \in \mathcal{P}} |CS^{d,w}.Estimate(p) - F(p)|}$ \\
+	subject to $d\cdot w$ = V\\
+\end{center}
+Where $SC^{d,w}$ is a SC with d rows and w columns, F(p) is the ground truth frequency of password p.
+\end{comment}
+
+
+\begin{comment}
+\mypara{Proof:}
+We start the proof by first formally formulating the question; Given total volume size V and a dataset $\mathcal{P}$ that follows Zipf's distribution. What's the optimal setting of $d$ and $w$ for CS i.e. one needs to solve the following integer programming problem
+\begin{center}
+	minimize $\displaystyle{\sum_{\forall p \in \mathcal{P}} |CS^{d,w}.Estimate(p) - F(p)|}$ \\
+	subject to $d\cdot w$ = V\\
+\end{center}
+Where $SC^{d,w}$ is a SC with d rows and w columns, F(p) is the ground truth frequency of password p.
+
+Given any password p, the estimation of its frequency from $CS^{d,w}$ is
+\begin{align*}
+CS^{d,w}.Estimate(p) &= median_{\forall i \in d}\{ CS[i,h_i(p)]\cdot h_{\pm}(p) \}
+\end{align*}
+Let $p_i$ be the set of passwords s.t. $\forall p' \in p_i$, $h_i(p') = h_i(p)$. i.e. $p_i$ is the set of passwords that has collision on $i^{th}$ row with p. Then the above formula can be rewritten as 
+\begin{align*}
+CS^{d,w}.Estimate(p) &= median_{\forall i \in d}\{ \displaystyle{\sum_{\forall{p' \in p_i}}F(p')\cdot h_{\pm}(p') }\}\\
+\end{align*}
+
+Let m the be index of row s.t. $CS[m, h_m(p)]$ is the median value across all rows. Then the estimation of p is 
+\begin{align*}
+CS^{d,w}.Estimate(p) & = CS[w, h_w(p)] \\
+&= \displaystyle{\sum_{\forall p' \in p_m}F(p')\cdot h_{\pm}(p')}\\
+&= \displaystyle{\sum_{\forall p' \in p_m}\frac{N}{2^{rank(p')}}\cdot h_{\pm}(p')}\\
+\end{align*}
+let $p^*$ be the one with highest frequency in  $CS[w, h_w(p)]$, let $F^*$ be the frequency of $p^*$
+\begin{align*}
+= \displaystyle{\sum_{\forall p' \in p_m}\frac{F^*}{2^{rank(p^*) - rank(p')}}\cdot h_{\pm}(p')}\\
+= \displaystyle{F^*\sum_{\forall p' \in p_m}\frac{1}{2^{rank(p^*) - rank(p')}}\cdot h_{\pm}(p')} \\
+\end{align*}
+When $h_{\pm}(p^*) = 1$, 
+\begin{align}
+\displaystyle{E(\lim_{|p_m|\rightarrow \infty} CS^{d,w}.Estimate(p) )} \label{equation: rv} &= F^*\cdot(1 + 0)
+\end{align}
+Similarly, When $h_{\pm}(p^*) = -1$,  the expected value of the above sum is -1$\cdot F^*$. Notice that when the sign of $p^*$ is fixed, we can treat the rest $h_{\pm}(p')$ as Bernoulli random variables. For each random variable, it's expected value is 0 therefore the expected value of sum is the sum of expected values, which is 0. In fact, one can treat \textbf{Equation} ~\ref{equation: rv} as a uniform random variable ranges from [$0, 2\cdot F^*$] when , we plot the distribution in \textbf{Figure} ~\ref{fig: rv_plus.png}.
+\end{comment}
+
+
+
+\begin{comment}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[height=2in,width=\linewidth]{figures/mainAlgo/DWTradeOff/plus.png}
+\caption{PDF of equation ~\ref{equation: rv}  }\label{fig: rv_plus.png}
+\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[height=2in,width=\linewidth]{figures/mainAlgo/DWTradeOff/minus.png}
+\caption{PDF of equation ~\ref{equation: rv} (negative version)  }\label{fig: rv_minus.png}
+\end{center}
+\end{figure}
+
+Notice that the above is the expected value of $CS[w, h_w(p)] $, or the estimated frequency of p. Let the rank of p be r, then probability of a password p becomes $p^*$ can be calculated as follows
+\begin{align}
+	\Pr{p* = p} &= \frac{\binom{|\mathcal{U}| - r}{\frac{|\mathcal{U}|}{w} - 1 }}{\binom{|\mathcal{U}| - 1 }{\frac{|\mathcal{U}|}{w} - 1 }}  \label{equation: wr_relation}
+\end{align}
+\textbf{Equation} ~\ref{equation:wr_relation} gives us the probability of p ``dominates" row i. If we want p to be comes median of d rows, the probability becomes $\frac{1}{d}$, therefore, getting correct estimation of p is 
+\begin{align}
+	\Pr{median = p} \frac{\binom{|\mathcal{U}| - r}{\frac{|\mathcal{U}|}{w} - 1 }}{\binom{|\mathcal{U}| }{\frac{|\mathcal{U}|}{w} - 1 }} \frac{1}{d} \label{equation: wdr_relation}
+\end{align}
+\textbf{Equation}~\ref{equation: wdr_relation} gives us the probability of a password p got correct estimation as a formula of w, d, and r. Thus, to increase the probability, one shall decrease d strictly.  
+\end{comment}
+\begin{comment}
+
+
+Due to the space limitation, we omit the detail proof for Count Mean Sketch and Count Min Sketch. Instead, we demonstrate empirical results in \textbf{Section}~\ref{sec:dwtradeoff} . For curious readers, one can follow the above proof by making necessary changes to the above proof flow. Intuitively, when one sum d different $p^*$ values, $p^{**}$, the largest value among them, dominate the sum and therefore dominate the averages. 
+\end{comment}

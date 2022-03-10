@@ -1,0 +1,45 @@
+\section{Prior Reviews From Reviewer B}
+
+\mypara{Overall merit}
+2. Weak reject
+
+\mypara{Reviewer expertise}
+3. Knowledgeable
+
+\mypara{Paper summary}
+This work proposes DALock, a mechanism for thwarting online guessing attacks against password-protected accounts. Typical strategies for doing so are to lock an account after some number, k, of incorrect login attempts. The number k is often set to 3 or 10. Instead, DALock proposes taking the popularity of the guess into account. The work appears to complement the k-strikes approach with a (differentially private) count sketch data structure that can use approaches like password frequencies or estimates of password strength (e.g., with ZXCVBN) to more quickly lock accounts for which popular passwords are being guessed, intended to stop a trawling adversary in their tracks.
+
+\mypara{Strengths}
+The paper's main strength is its sensible application of a variety of current methods for estimating the popularity of a password. The overall idea of locking accounts that exhibit guesses of popular passwords is a good one.
+
+\mypara{Weaknesses}
+Unfortunately, the paper's main idea (locking accounts that exhibit guesses of popular passwords) was already published last year by Tian et al., and the differences are mostly nuances. This paper's empirical analysis, which could instead be its contribution, does not investigate a range of blacklist policies (only $10^{4}$ guesses), does not account for attackers changing their strategies in response to the scheme, and ultimately does not show much improvement over a k-strikes policy in security. The usability argument, the potential contribution that is left, is all based on simulation and a two-decade-old paper.
+
+\mypara{Comments for author}
+
+This paper takes a sensible approach of considering password frequencies, ZXCVBN, Markov Models, and Neural Networks alongside a (differentially private) count sketch they introduce. In other words, this work nicely applies its knowledge of the state of the art of password strength measurement.
+
+I was glad to see the analysis account for typos (user mistakes) based on prior work. I was also glad to see a blacklist policy of $10^{4}$ passwords evaluated since that's a very sensible point of comparison for DALock. However, why was $10^{4}$ chosen, as opposed to evaluating different size blacklists? For a sufficiently large blacklist, it's possible that DALock would have no effect, and it's possible (though completely conjecture on my part) that the usability would be similar. Furthermore, is rejection sampling the right approach, or might users take a more sophisticated approach in dealing with a rejected password? In any case, larger blacklists would be important points of comparison to investigate.
+
+I thought the work's presentation of the Differentially Private Count-Median-Sketch approach was nicely done and I appreciate the honest assessment that indeed the count sketch can leak information ("One disadvantage is that the attacker will also be able to view the Count-Sketch data-structure if the data-structure is leaked"). Given that last point, though, I think it's important for the authors to analyze the degree to which a count sketch can aid in offline attacks.
+
+However, the core problem with this work is that it's a very similar idea to the Tian et al. paper ("StopGuessing") from last year. While that work ties popular password guesses to IP addresses, this work takes the slightly different approach of tying it to accounts. I would like to see this work published. However, I'm not sure if that's enough novel insight for a CCS paper. Another way this work could contribute is potentially its empirical evaluations. However, as I mention below, the empirical evaluations don't show much of an improvement in security over the traditional k-strikes scheme, and furthermore the usability analysis is shallowly based on abstract arguments, rather than new empirical data.
+
+I was hoping for more depth in Sec. 5.4.1 (Optimizing Attack Strategies). Ultimately, if the attacker knows that common guesses will be highly penalized, wouldn't they adopt some strategy that mixes common guesses with uncommon guesses so that the k-strikes limit (not the DALock frequency-sensitive limit) is hit? As a result, the paper seems not to capture an actual attacker strategy.
+
+The paper is a bit unclear on terminology, which is especially important because this lack of clarity relates directly to the details of the scheme being proposed. In the evaluation, the paper talks about, e.g., "$(10,\Psi)$-DALock" without ever defining that terminology. That seems to imply setting k to 10 (the 10 strikes policy) as well as having DALock parmeterized by $\Psi$. However, the paper previously was unclear about whether the weighted scheme *complements* or *replaces* the k-strikes policy. From both this apparent terminology and two lines in the description of DALock ("The key-idea behind DALock is to additionally maintain an extra “hit count” variable $\Psi$"... "DALock throttles u’s account if the “hit count” exceeds $\Psi$ (i.e.,$\Psi_u \ge \Psi$) or if there are too many consecutive mistakes (i.e.,$K_u$$\ge$K)"), it seems pretty certain that *complements* is the right interpretation.
+
+In that case, then, the security metric for DALock will always be at least as good as for the traditional k-strikes policy, but then wouldn't the usability potentially be worse. In short, I didn't follow what is effectively the main argument in the paper that DALock is strictly better at balancing usability and security compared to a k-strikes policy. Perhaps the argument is the very nuanced version that DALock with 10 strikes is better than the traditional 3-strikes policy, but this should be made more clear. That said, looking closely at Figure 7, it seems like the traditional 3-strike policy is very similar to DALock in security, so the whole paper's main contribution seems to rest on 10 strikes being much more usable than 3 strikes, a claim that is based only on a nearly two-decade-old paper from Brostoff and Sasse.
+
+The bib entry for [56] (the most related paper to this submission) has some errors in the author field, causing it to be misalphabetized.
+
+The paper has substantial errors in spelling and grammar. I've noted below just a few of these:
+"miss types (or miss remembers"
+"Poissuon arrival process"w
+"Password distribution has been extensively studied since last decades"
+"A password cracker risks loosing its deposit if it is not able to guess the real password"
+"statcial guessing"
+"In recent works of Wang et al. [50–52] argue"
+"and it’s variants"
+"Naor et.al"
+

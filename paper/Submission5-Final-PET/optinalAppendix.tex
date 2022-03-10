@@ -1,0 +1,119 @@
+
+
+
+\begin{comment}
+\section{$\DALock$ Authentication Algorithm}
+We supplement the pseudo code of $\DALock$ in this section to help readers understand how to implement $\DALock$. The authentication process takes four arguments: username $u$, input password $pw$ (which may or may not be the same as $u$’s password $pw_u$), salt $s_u$, and password popularity estimator $\sigma$. Before verifying the correctness of the entered password, $\DALock$ first checks if $u$'s account has already been locked or not based on $\hitCountThreshold_{u}$ and $\strikeThreshold{u}$. If the account is not locked, $\DALock$ proceeds and verifies the correctness of the entered password. If the password is valid, i.e., pw = $pw_u$, $\DALock$ resets strike threshold $\strikeThresholdOfU{u}$ and grants the access. If the entered password is wrong, then in addition to denying access to the service, the server also increases $\hitCountThresholdOfU{u}$ and $\strikeThreshold$ by $\EstP_{\sigma}{pw}$ and 1, respectively.
+
+
+\begin{algorithm}[!htb]
+\caption{\textbf{$\DALock$}: Novel Password Distribution-Aware Throttling Mechanism }\label{algorithm:DALock}
+\begin{algorithmic}[1]
+\Function{login}{$u$, $pw_u$, $\sigma$,$s_u$} 
+\If {$\hitCountThresholdOfU{u} \geq \hitCountThreshold$ or  $\strikeThresholdOfU{u} \geq \strikeThreshold$ }
+\State Reject Login(Locked)
+\EndIf
+\If{$hash(pw,s_u)$ == $hash(pw_u,s_u)$}
+\State Reset $\strikeThresholdOfU{u}$ to 0
+\State Grant Access
+\Else
+\State $\hitCountThresholdOfU{u} \leftarrow \hitCountThresholdOfU{u} + \EstimateP{pw}{\sigma}$
+\State $\strikeThresholdOfU{u} \leftarrow \strikeThresholdOfU{u}$ + 1
+\State Deny Access
+\EndIf
+\EndFunction
+\end{algorithmic}
+\end{algorithm} 
+\end{comment}
+
+\begin{comment}
+\section{Password Knapsack is $\NP$ hard}\label{appendix:pkhardness}
+
+In this section, we supplement the details on proving $\PK$ is $\NP$ hard by showing a reduction from a well-known $\NP$hard problem subset-sum to it. We begin this by first formally define the subset sum problem and then prove password knapsack is $\NP$ hard by showing the reduction from subset sum to it.
+
+\begin{definition}[Subset Sum]
+	Given partition instance $x_1,\ldots,x_{n} \in (0,2^m]$ and target sum value $T$. The  goal is to find $S \subseteq [n]$ s.t. $\sum_{i\in S} x_i = T$.
+\end{definition}
+
+\begin{thm}[Hardness of Password Knapsack]\label{appendix:ProofOfPasswordKnapsack}
+	Find optimal solutions for password knapsack is $\NP$-hard.
+\end{thm}
+
+\mypara{Proof:}
+\textbf{Reduction}: One can create the following password knapsack instance 
+\begin{itemize}
+	\item Set $\gamma = \sum_{i=1}^n x_i$,
+	\item Set $\psi = T/(2\gamma )< \frac{1}{2}$,
+	\item Set $CS(p_i)= f(p_{i}) = x_i/(2\gamma)$ for $i=1,\ldots, n$
+	\item Set $f(p_{last}) = 1-\sum_{i =1}^{n} p_i = 1/2 > \psi$. 
+\end{itemize}
+If $S$ exists for partition instance, then the attacker can use $S$ for password knapsack to crack $p_{last}+T/(2\gamma)$ passwords. On the other hand, let $S$ be the optimal password knapsack solution such that $\sum_{i \in S} CS(p_i) \leq \psi$, then the attacker cracks at most $p_{last}+\sum_{i \in S} f(p_i) \leq 1/2 + \psi$ passwords. If equality holds, then $\sum_{i \in S} f(p_i) = \psi$ which implies $\sum_{i \in S} x_i = T$ by definition of $\psi$.
+
+
+
+
+\vspace{-0.1in}
+\end{comment}
+
+\begin{comment}
+\vspace*{-\baselineskip}
+\vspace*{-\baselineskip}
+\section{Solving $\PK$ with Heuristic}\label{appendix:solvePK}
+\vspace*{-\baselineskip}
+In this section, we discuss two heuristic approaches, $\DAB$ and $\FMPPF$, described in \lazyref{Section}{section:ExperimentDesign-subsection:SimulateAttacker}.  
+
+The $\DAB$ approach takes three inputs: a sorted password dictionary $\mathcal{P}_{\tilde{\Pi}} = \{\tilde{pw}_1, \ldots, \tilde{pw}_{n} \}$, hit count budget $\hitCountThreshold$ and strike count budget $\strikeThreshold$. $\mathcal{P}_{\tilde{\Pi}}$ is sorted based on the ratio of actual popularity and estimated popularity, i.e., $\frac{\EstP{pw}}{\TrueP{pw}}$: $\mathcal{P}_{\tilde{\Pi}} = \{pw_{\tilde{\Pi}(1)}, \ldots, pw_{\tilde{\Pi}(n)} \}$. The algorithm keeps placing passwords into the knapsack S based on the sorted order until it cannot further add some password $pw$, i.e., $\EstP{S \cup pw} \ge \hitCountThreshold$. At this point, $\DAB$ compares $\TrueP{pw}$ with $\TrueP{S}$ and sets S to be the one with the higher value. The above process is repeated until the whole dictionary is scanned. In the end, the algorithm returns $K$ passwords based on their actual probabilities.
+
+Primary incentives of using $\DAB$ are 1) to take advantage of underestimated passwords and 2) to avoid (severely) overestimated ones. However, there are several drawbacks of $\DAB$. Firstly, the progress can be slow because priorities are given to significantly underestimated passwords, i.e., rare passwords. Intuitively, the ratio $\frac{\TrueP{pw}}{\EstP{pw}}$ of popular password $pw$, i.e., $\TrueP{pw}$ is large, is likely to be close to 1; therefore, attempts with popular ones are likely to be delayed. Secondly, unlike the vanilla version of Knapsack, $\DAB$ may not yield a 2-approximation due to the additional constraint on the number of passwords. Third, the computation cost of $\DAB$ is high because the algorithm has to go through the whole dictionary (for each run). Consider $\Adversary$ usually attack multiple accounts simultaneously, $\DAB$ may not be the heuristic to be used.
+%is slightly higher for running $\DAB$ though both algorithms terminate reasonably quickly. %Thirdly, computation cost can still be a concern for large scale attacks. 
+
+
+
+%\begin{algorithm}[!htb]
+%	\caption{\textbf{$\DAB$ Attack }}\label{algorithm:Dantizig}
+%	\textbf{Return:}  An array of password sorted in the order of guessing
+%	\begin{algorithmic}[1]
+%		\Function{$\DAB$ Attack}{$\mathcal{P}_{\tilde{\Pi}}, \Psi, M(T)$}
+%		\State $S$= []
+%		\While{$S$ changes}
+%		\For{ $pw \in \mathcal{P}_{\tilde{\Pi}}$  }
+%		\If{$\EstP{pw}$ $> \Psi$ }
+%		\State \textbf{continue}
+%		\EndIf
+%		\If{$\EstP{S\cup pw}$ $< \Psi$ and $|S| \le$ $M(T)$  }
+%		\State $S \leftarrow S \cup pw$ 
+%		\ElsIf{$\TrueP{pw} > \TrueP{S}$ }
+%		\State $S \leftarrow$ \{p\}
+%		\EndIf
+%		\EndFor
+%		\EndWhile
+%		\State \Return Top $M(T)$ passwords from $S$ based on actual popularity.
+%		\EndFunction
+%	\end{algorithmic}
+%\end{algorithm}  
+
+%and its pseudo code is available in \textbf{Algorithm}~\ref{algorithm:FMPPF}. 
+A faster alternative to $\DAB$ is $\FMPPF$.  It takes three input parameters: password dictionary $\mathcal{P} = \{pw_1, \ldots, pw_{n} \}$, hit count budget $\hitCountThreshold$, and strike budget $\strikeThreshold$. $\FMPPF$ selects passwords greedily as well but using different criteria. $\mathcal{P}$ is a password dictionary sorted based on the actual popularity only. In addition, to save computational cost, $\FMPPF$ terminates once it finds $K$ passwords suitable for attacks and stops further exploring the dictionary.
+
+In short-time attack scenarios, $\FMPPF$ offers a better chance of success than $\DAB$ by attempting popular ones first. For long-term attacks, $\FMPPF$ should still be able to achieve almost optimal results given an abundant choice of passwords.  In fact, based on the empirical results (in \textbf{section}~\ref{section:ExperimentResult-security}), the performance of $\FMPPF$ is very close to theoretical upper bounds ($\Psi + \TrueP{pw_1}$) . %Last but not least, $\FMPPF$ is computational efficient comparing to $\DAB$.
+
+
+%\begin{algorithm}[!htb]
+%	\caption{\textbf{$\FMPPF$ Approach}}\label{algorithm:FMPPF}
+%	\textbf{Return:} An array of password sorted in the order of guessing
+%	\begin{algorithmic}[1]
+%		\Function{\FMPPF}{$\mathcal{P}, \Psi, M(T)$}
+%		\State $S$= []
+%		\For{ $pw \in \mathcal{P}$  }
+%		\If{$\EstP{S \cup p}$ $< \Psi$ and $|S| < M(T)$  }
+%		\State $S \leftarrow S \cup pw$ 
+%		\EndIf
+%		\EndFor
+%		\State \Return S
+%		\EndFunction
+%	\end{algorithmic}
+%\end{algorithm} 
+
+
+\vspace{-0.1in}
+\end{comment}

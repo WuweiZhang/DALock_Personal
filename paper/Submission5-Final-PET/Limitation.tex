@@ -1,0 +1,36 @@
+% !TEX root = main.tex
+\mypara{Limitations}\label{sec: Limitations}
+Our empirical {usability and} security results are all based on simulations. While we aim to model the authentication server, users, and a powerful attacker, there will inevitably be some differences between the simulated/real-world behavior of the attacker/users. We also remark that our simulations do not model the behavior of targeted attackers. Extending $\DALock$ to protect against targeted attackers is an important research question that is beyond the scope of the current paper. {Another future direction of study is to conduct a longitudinal user studies to confirm the ecological validity of the simulated usability results.} Finally, we remark that larger organizations might distribute the workload across multiple authentication servers. In this case maintaining a synchronized state $(\strikeThresholdOfU{u}, \hitCountThresholdOfU{u})$ for each user $u$ could be challenging. To address this challenge, it may be necessary to define a relaxation of our $\DALock$ mechanism where the states $(\strikeThresholdOfU{u}, \hitCountThresholdOfU{u})$ on each authentication server are not always assumed to be perfectly synchronized. 
+
+{
+\mypara{Locking Accounts vs Blocking IPs} In our simulated evaluation of $\DALock$ we assume that each user {\em account} $u$ is locked if the hit count $\hitCountThresholdOfU{u}$ exceeds the threshold $\hitCountThreshold$ (or if the consecutive strike threshold $\strikeThreshold$ is reached). An alternative (more lenient) implentation of $\DALock$ would instead maintain the state $(\strikeThresholdOfU{u,ip}, \hitCountThresholdOfU{u, ip})$  for each distinct user/IP pair $(u,ip)$ where $\hitCountThresholdOfU{u,ip}$ (resp. $\strikeThresholdOfU{u,ip}$) tracks the total hit count (resp. consecutive incorrect guesses) for all guesses submitted from the IP address $ip$ against user $u$. } { Under this alternate approach we could block a (malicious) ip address from attemting to login to account $u$ once $\hitCountThresholdOfU{u, ip}$ exceeds the threshold   $\hitCountThreshold$. One advantange of this approach is that it is less vulnerable to denial of service attacks and we are less likely to lockout the legitimate user who will (most likely) have a different IP address. Furthermore, this approach may be easier to implement in a distributed setting as the servers do not need to synchronize the state $(\strikeThresholdOfU{u}, \hitCountThresholdOfU{u})$ for each user --- instead each authentication server would independently maintain  the value $(\strikeThresholdOfU{u,ip}, \hitCountThresholdOfU{u, ip})$ for IP addresses in its service area. On the downside blocking individual IP addresses instead of accounts allows an distributed online attacker to launch coordinated attacks from multiple different IP addresses (e.g., through botnets) increasing the the risk to each user account. }
+
+ 
+
+
+
+
+
+%\mypara{Other Attacks} $\DALock$ assumes that adversaries perform rational online dictionary attacks. Therefore, it can be vulnerable against other methods such as targetted attack and denial-of-service attacks. We leave this as an important research topic for the furture studies.
+
+%\mypara{Protecting Weakest User} No matter how small $\Psi$ is deplyed, $\Adversary$ can always compromise the weakest users under the general framework of $\DALock$ since thresholds are maintained \textit{after} verification. Without the help of stricter authentication protocols such as 2FA, $\DALock$ alone is not able to reduce such lower bound.
+
+%\mypara{Password Distribution}
+%$\DALock$ assumes that the stored password distribution is close to the real one. Firstly, $\Adversary$ can maliciously register enornmous amount of accounts to lower the popularity of actual frequent passwords. The account creation process shall be carefully auditted to overcome the issue. Secondly, Since users can change their passwords at any time, one should update the Count-Sketch periodically (such as every 6 month).
+%\mypara{Simulating Users' mistake} In this work, we simulate user's mistakes by considering two types of errors: 1) Typos, and 2) Entering a different password based on the work of Chatterjee et al\cite{CCS:CWPCR17}. There can be a gap between real world scenarios and our simulations. For example, users who use malfunctioning keyboards are likely to repeat their mistakes. 
+
+%\jeremiah{A bit awkward to have two comparisons}
+%\mypara{$\textsf{\textbf{DALock}}$ and StopGuessing\cite{EuroSP:THS19}}
+
+%As mentioned in \textbf{section}~\ref{sec: relatedwork}, both $\DALock$ and StopGuessing utilize the distribution of passwords to defend against dictionary. In this part, we further discuss the difference of these two works.
+
+%\textbf{Different Passwords Distribution} Firstly, $\DALock$ and StopGuessing collects different distributions. $\DALock$ uses true password distriubtion (perturbed by differential privacy) to estimate popularity of password. On the other hand, StopGuessing uses the distribution of \textit{failed attempts}. Maliciously altering the former distribution is a challenging task for attackers because significantly many accounts have to be created. Perturb the distribution stored by StopGuessing is eaiser as it only requires spamming attempts.
+
+
+%\textbf{Throttling Threshold} $\DALock$ maintains a \textit{global fractional} hit count threshold $\Psi$ for rate limiting. On contrary,  StopGuessing implicitly maintains interger threshold for each user u based on the strength of password $p_u$. For $\DALock$, service provider can intuitively $\Psi$ based on the risk one is willing to take. For StopGuessing, it is less straight-forward to setup all the parameters such as penality functions.
+
+%\textbf{Against Dictionary Attack} $\DALock$ and StopGuessing can easily be integrated  to provide a solid defense against dicitonary attack. $\DALock$ offers concrete account protection because attackers is subject to limited chance of success. This is not true for StopGuessing if the adversary is powerful, e.g. controls a large botnet . Dictionary attcker can attempt real popular passwords while delibrately create`popular passwords" to circumvent or relief the constraints imposed by StopGuessing. 
+
+
+
+

@@ -1,0 +1,110 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: ccs-template.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: otherReference/IEEEExample.bib
+Warning--entry type for "AppleDPTeam" isn't style-file defined
+--line 71 of file otherReference/IEEEExample.bib
+Warning--entry type for "DictionaryAttack:Ransomware" isn't style-file defined
+--line 110 of file otherReference/IEEEExample.bib
+Warning--entry type for "News:FacebookCaseSensitiveNews" isn't style-file defined
+--line 190 of file otherReference/IEEEExample.bib
+Warning--entry type for "News:AmazonTypo" isn't style-file defined
+--line 214 of file otherReference/IEEEExample.bib
+Warning--entry type for "DictionaryAttack:Microsoft" isn't style-file defined
+--line 224 of file otherReference/IEEEExample.bib
+Warning--entry type for "News:AccountPerUser" isn't style-file defined
+--line 231 of file otherReference/IEEEExample.bib
+Warning--entry type for "Dataset:RockYou" isn't style-file defined
+--line 254 of file otherReference/IEEEExample.bib
+Warning--entry type for "Dataset:LinkedIn" isn't style-file defined
+--line 263 of file otherReference/IEEEExample.bib
+Warning--entry type for "WebSite:HaveIBeenPwned" isn't style-file defined
+--line 278 of file otherReference/IEEEExample.bib
+Warning--entry type for "WebSite:GooglePasswordCheckUp" isn't style-file defined
+--line 297 of file otherReference/IEEEExample.bib
+Warning--entry type for "DuoWeakPassword" isn't style-file defined
+--line 340 of file otherReference/IEEEExample.bib
+Database file #2: cryptobib/abbrev0.bib
+Reallocated str_pool (elt_size=1) to 130000 items from 65000.
+Reallocated str_pool (elt_size=1) to 195000 items from 130000.
+Reallocated str_pool (elt_size=1) to 260000 items from 195000.
+Database file #3: cryptobib/crypto.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in ICCSA:AFZSEW09
+Warning--empty address in ICCSA:AFZSEW09
+Warning--empty year in AppleDP
+Warning--empty year in AppleDPTeam
+Warning--page numbers missing in both pages and numpages fields in NDSS:BloDatBon16
+Warning--empty publisher in BKPS:ACMEC13
+Warning--empty address in BKPS:ACMEC13
+Warning--no journal in brostoff2003ten
+Warning--no number and no volume in brostoff2003ten
+Warning--no number and no volume in ECS:Dwork11
+Warning--empty publisher in FloHer:WWW07
+Warning--empty address in FloHer:WWW07
+Warning--page numbers missing in both pages and numpages fields in NDSS:FJDBG16
+Warning--page numbers missing in both pages and numpages fields in NDSS:GYCZLT16
+Warning--empty publisher in SOUPS:GBD17
+Warning--empty address in SOUPS:GBD17
+Warning--page numbers missing in both pages and numpages fields in SOUPS:GBD17
+Warning--empty publisher in KSKMBCCE:SIGCHI11
+Warning--empty address in KSKMBCCE:SIGCHI11
+Warning--empty publisher in DavKev:WWW12
+Warning--empty address in DavKev:WWW12
+Warning--empty address in CCS:NaoPinRon19
+Warning--no number and no volume in arXiv:NarShm06
+Warning--page numbers missing in both pages and numpages fields in arXiv:NarShm06
+Warning--no number and no volume in UTA:NarShm08
+Warning--page numbers missing in both pages and numpages fields in UTA:NarShm08
+Warning--empty publisher in HTS:SchHerMit10
+Warning--empty address in HTS:SchHerMit10
+Warning--no number and no volume in SchHer:MSR18
+Warning--page numbers missing in both pages and numpages fields in SchHer:MSR18
+Warning--empty publisher in EuroSP:THS19
+Warning--empty address in EuroSP:THS19
+Warning--page numbers missing in both pages and numpages fields in EuroSP:THS19
+You've used 52 entries,
+            5706 wiz_defined-function locations,
+            14472 strings with 232783 characters,
+and the built_in function-call counts, 65518 in all, are:
+= -- 7940
+> -- 2088
+< -- 0
++ -- 639
+- -- 1560
+* -- 4787
+:= -- 6528
+add.period$ -- 259
+call.type$ -- 52
+change.case$ -- 351
+chr.to.int$ -- 51
+cite$ -- 85
+duplicate$ -- 4623
+empty$ -- 3412
+format.name$ -- 849
+if$ -- 14681
+int.to.chr$ -- 2
+int.to.str$ -- 0
+missing$ -- 175
+newline$ -- 497
+num.names$ -- 383
+pop$ -- 2142
+preamble$ -- 1
+purify$ -- 610
+quote$ -- 0
+skip$ -- 1751
+stack$ -- 0
+substring$ -- 7083
+swap$ -- 419
+text.length$ -- 1714
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 1414
+warning$ -- 33
+while$ -- 371
+width$ -- 0
+write$ -- 1018
+(There were 44 warnings)

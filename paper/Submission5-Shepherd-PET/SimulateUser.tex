@@ -1,0 +1,37 @@
+% Comment Unwanted text for later S&p Submission
+% !TEX root = main.tex
+\section{Simulating Users' Login Activities} \label{sec:simulateUsers}
+To accurately assess the performance of $\DALock$, it' crucial to simulate user's behavoir reasonbly.  In this Section, we focus on discussing how to simulate users' login activities in our experiments. Generally speaking, there are three aspects one needs to consider:
+\begin{itemize}
+	\item User's password choice.
+	\item User's login patterns/frequency.
+	\item User's Honest mistake
+\end{itemize}
+
+
+
+\subsection{Simulating Users' Choice of Password}
+
+This is a straight forward task for RockYou dataset. Ideally, one can create users and assign passwords based on the distribution of plaintext password strings. In our simulation, a users' chance of selecting a particular password is identical to it's popularity density in the dataset. For example, When simulating experiments based on RockYou dataset, each user has probability 0.89\% to choose ``123456" as their password. 
+
+\mypara{Simulating Password Choices on LinkedIn and Yahoo} It's tricky to simulate users' choice of password strings based on dataset \textbf{LinkedIn} and \textbf{Yahoo}as we don't have the plaintext of passwords. To overcome this issue, we map passwords from \textbf{RockYou} to \textbf{LinkedIn} and \textbf{Yahoo} as follows:
+
+\begin{itemize}
+	\item Map top 20,000 passwords from RockYou to top 20,000 passwords of LinkedIn/Yahoo
+	\item Map rest of the passwords uniformly according to ranks.
+\end{itemize}
+
+For example, the most popular password from LinkedIn is represented by ``123456", the most frequent password from RockYou. The second most popular password from LinkedIn is ``12345" after mapping. The first 20,000 password strings will be exactly the same as top 20,000 passwords in RockYou. For the rest of the passwords, we either uses a random password string or uses a password string from RockYou. Since  RockYou has 14,341,564 uniques passwords and LinkedIn has 60,065,486 unique passwords, we map password string to LinkedIn from RockYou roughly every 4 passwords/ranks. 
+
+We argue the above simulation is reasonable and valid. For attacker, this hardly makes any difference as they cares significantly more on password popularities ithan the content of the strings. On the other hand, the choice of password string can have a significant impact on users. For instance, users who choose ``123456" as their password are more likely to get locked out if they enter ``12345", the second most popular password in the dataset. Therefore, to simulate a proper distribution, we map passwords as we mentioned above.
+
+
+
+\subsection{Simulating user's login patterns}Following prior work we use a Poisson arrival process to model a user's login activities\cite{AC:BloBluDat13}\cite{CCS:KogManBon17} with arrival rate parameter $t_u$ for each user u. To verify the performance of $\DALock$ over a reasonablly long time span, we simulate the login activities over time span of 180 days, or 4320 hours. In our simulation, each user's login activities can be viewed as a sequence of increasing random variables $0 < T_1 < t_2 < \cdots <  4320 = 180*24$. Each random variable T, or login activity, is generated from range 0 to 4320 to represent u' login activities at time R over 180 days time span (rounded to hours). The smaller value of $t_u$, the more frequent u logins into her accounts. To have a realistic representation of login pattern, for each user u, $t_u$ is sampled uniformly random from \{ 12, 24, 24 * 3, 24 * 7, 24 * 14, 24 * 30\}.
+
+Notice that for each login activity, more than one login attempts can generated because of users' mistakes. Naturally, we simulate each login activity by assuming that users will keep trying until they successfully login into their account, or get locked out unfortunately.
+
+
+
+\subsection{Simulating user's mistakes} is the last challenging ingredient for simulating user's login activities. In order to reasonably simulate user's mistakes, two major type mistakes were took into considerations: entering a different password or making typos on the original passwords. We followed a recently published statics on users's mistakes\cite{CCS:CWPCR17} to setup the probability of users' (varies type of) mistakes. Based on the results of the literatures, users have roughly 7.5\% chance of making a mistake (Pr(Mistake) = 0.075). Among those mistakes 68\% of those incorrect attempts are within editing distance 2. To simplify the model and analysis, we consider that as the probability as making typos. i.e. given a password p, user has probability $0.075\cdot 0.68$ of typing it wrong. We summarized the distribution of various types of typos in Table~\ref{Table:TypoTypes} for reader's convenience.  Further more, we consider the rest 32\% errors come from entering wrong passwords(editing distance greater than 2), in another word, entering different passwords. Therefore, each user has probability $0.075\cdot 0.32$ to select a wrong password to attempt (of course, the user can make typos on top of that!). We setup such secondary passwords (in users' mind) when users are created by randomly sampling a different password for each user based on the distribution of passwords. To help readers capture the essence of user's honest mistakes are simulated in our experiment, we present the flow chart in Figure ~\ref{fig:flowChartTypo}, \textbf{Appendix}.
+
