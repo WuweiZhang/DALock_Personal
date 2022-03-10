@@ -27,14 +27,14 @@ We empirically evaluated the performance of $\DALock$ under a variety of scenari
 \vspace*{-\baselineskip}
 \begin{figure*}[h]
 	\includegraphics[width=\linewidth, height = 5cm]{Figures/Experiments/B10000.png}
-		\vspace{-0.25in}
+		\vspace{-0.35in}
 	\caption{Usability/Security Tradeoff of $\DALock$ with $(B=10^4)$ }
 	\label{figure:UseSecTradeoff}
 	\includegraphics[width=\linewidth, height = 5cm]{Figures/Experiments/Attacker/SecurityBigPicture.png}
-	\vspace{-0.25in}
+	\vspace{-0.35in}
 	\caption{Security Measurement of $\DALock$ }\label{figure:Security}
 	\includegraphics[width=\linewidth, height = 5cm]{Figures/Experiments/Utility/UsabilityBigPicture.png}
-	\vspace{-0.25in}
+	\vspace{-0.35in}
 	\caption{Usability Measurement of $\DALock$ }\label{figure:Usability}
 	\vspace{-0.25in}
 \end{figure*}
@@ -98,7 +98,7 @@ Thirdly,  we find that 0.1-CS-5\% usually performs as well as 0.1-CS-all with an
 
 \vspace*{-\baselineskip}
 \vspace*{-\baselineskip}
-\vspace*{-\baselineskip}
+
 \subsection{Summary and Discussion}\label{sec:experiment_summary}
 \vspace*{-\baselineskip}
 We find that $\CountSketch$/$\ZXCVBN$-based $\DALock$ offers a superior security/usability tradeoff to the classical $\strikeThreshold$-strikes mechanism. $\DALock$ can also be reasonably instantiated with password strength models such as Markov Models, Probabilistic Context-Free Grammars, and Neural Networks to achieve a reasonable balance between security and usability. Our simulations also highlight the security {\em and} usability benefits of banning overly popular passwords given an accurate ban-list. Our analysis shows that the best security/usability tradeoffs can be obtained when the most popular passwords are banned \textit{and} when the $\DALock$ frequency oracle is instantiated with a differentially private count sketch or $\ZXCVBN$ password strength meter. For large organizations with at least $0.3$ million users, we recommend using a $\epsilon$=0.1 differentially private count sketch as the frequency oracle and deploying $\KPsiDALock{10}{\hitCountThreshold}$ with $\strikeThreshold=10$ strikes and hit count parameter  $\hitCountThreshold$ $\in$ [$2^{-8},2^{-10}$].  For smaller organizations, we recommend implementing $\DALock$ with $\ZXCVBN$ e.g., $\ZXCVBN(K:10,\hitCountThreshold:2^{-9})$. 
